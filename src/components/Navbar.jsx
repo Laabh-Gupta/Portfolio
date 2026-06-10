@@ -35,7 +35,7 @@ export default function Navbar() {
         ))}
         <li>
           <a
-            href="/Laabh_Gupta_Resume.pdf"
+            href="/Laabh_Gupta.pdf"
             download
             className="nav-resume-btn"
           >
