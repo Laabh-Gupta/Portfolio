@@ -72,7 +72,7 @@ Full-stack journaling platform built with Spring Boot, MongoDB, JWT Authenticati
 - PostgreSQL
 - Delta Tables
 
-```
+---
 
 ## Contact
 
