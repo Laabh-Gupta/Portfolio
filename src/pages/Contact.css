@@ -1,0 +1,43 @@
+.contact-page { padding: 7rem 6% 5rem; max-width: 720px; margin: 0 auto; }
+.contact-hero { margin-bottom: 3.5rem; }
+.contact-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1rem;
+}
+.contact-subtitle { font-size: 1rem; color: var(--muted); max-width: 540px; line-height: 1.75; margin-bottom: 2rem; }
+.contact-email-link {
+  display: inline-block;
+  font-family: var(--font-mono); font-size: 1.1rem;
+  color: var(--cyan);
+  border-bottom: 1px dashed rgba(0,245,212,0.4);
+  padding-bottom: 2px; margin-bottom: 1.8rem;
+  transition: border-color 0.2s;
+}
+.contact-email-link:hover { border-color: var(--cyan); }
+.contact-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.contact-socials { margin-bottom: 3rem; }
+.social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.9rem; }
+.social-card {
+  display: flex; align-items: center; gap: 0.8rem;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1rem 1.2rem; transition: all 0.2s; cursor: pointer;
+}
+.social-card:hover { border-color: rgba(0,245,212,0.35); background: rgba(0,245,212,0.04); transform: translateY(-2px); }
+.social-icon { font-family: var(--font-mono); font-size: 1rem; color: var(--cyan); min-width: 1.2rem; }
+.social-label { font-family: var(--font-display); font-size: 0.92rem; font-weight: 500; color: var(--text); flex: 1; }
+.social-arrow { color: var(--muted); font-size: 0.9rem; }
+
+.contact-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.contact-detail-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1.1rem 1.3rem; display: flex; gap: 0.9rem; align-items: flex-start;
+  font-size: 1.2rem;
+}
+.contact-detail-card strong { display: block; font-size: 0.88rem; color: var(--text); margin-bottom: 0.15rem; }
+.contact-detail-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+@media (max-width: 768px) {
+  .contact-page { padding: 6rem 5% 4rem; }
+}

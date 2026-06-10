@@ -1,0 +1,1 @@
+Place your resume PDF named 'Laabh_Gupta_Resume.pdf' in the public/ folder before deploying.
