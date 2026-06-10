@@ -1,31 +1,89 @@
-# Laabh Gupta — Portfolio
+# Laabh Gupta | AI & Data Engineer
 
-A multi-page React portfolio site built with Vite + React Router.
+🌐 **Live Portfolio:** https://laabh-portfolio.netlify.app/
 
-## Before deploying
+Personal portfolio website showcasing my experience, projects, technical skills, achievements, and work in Artificial Intelligence, Machine Learning, Data Engineering, Generative AI, and Full-Stack Development.
 
-1. Drop your resume PDF into `public/` named exactly: `Laabh_Gupta_Resume.pdf`
-2. Run `npm run build` — this creates a `dist/` folder
-3. Deploy the `dist/` folder (or the whole project root) to Vercel or Netlify
+## About
 
-## Deploy to Vercel
+I am an AI & Data Engineer at EY GDS with a background in Computer Science (AI & ML). This portfolio highlights my professional experience, technical expertise, and projects spanning:
 
-1. Push this folder to a GitHub repo
-2. Go to vercel.com → New Project → Import that repo
-3. Framework: Vite (auto-detected)
-4. Click Deploy — done ✅
+- Artificial Intelligence & Machine Learning
+- Generative AI & RAG Systems
+- Data Engineering & MLOps
+- Computer Vision
+- Full-Stack Development
+- Enterprise Software Development
 
-## Deploy to Netlify
+## Featured Projects
 
-1. Push to GitHub
-2. Go to app.netlify.com → Add new site → Import from Git
-3. Build command: `npm run build`
-4. Publish directory: `dist`
-5. Click Deploy — done ✅
+### 🛡️ TruthGuard
+LLM-powered misinformation detection platform combining Retrieval-Augmented Generation (RAG), fact verification, and explainable AI techniques.
 
-## Local dev
+### 🎙️ Voice Anti-Spoofing System
+Deep learning system achieving **99.75% test accuracy** in detecting AI-generated voices using CNNs and Vision Transformers.
 
-```bash
-npm install
-npm run dev
+### 📚 Advanced RAG Systems
+Collection of advanced Retrieval-Augmented Generation pipelines exploring hybrid search, query expansion, re-ranking, and contextual compression techniques.
+
+### 🏥 Parkinson's Disease Detection
+Explainable AI-based healthcare diagnostics system using biomedical voice data and interpretable machine learning models.
+
+### 📓 Daily Journal App
+Full-stack journaling platform built with Spring Boot, MongoDB, JWT Authentication, and Kafka event-driven architecture.
+
+## Tech Stack
+
+### Languages
+- Java
+- Python
+- C/C++
+- SQL
+
+### AI / ML
+- PyTorch
+- TensorFlow
+- Scikit-learn
+- LangChain
+- RAG
+- Agentic AI
+- OpenCV
+- MLflow
+
+### Backend
+- Spring Boot
+- Node.js
+- FastAPI
+- Express.js
+- REST APIs
+
+### Frontend
+- React.js
+- TypeScript
+- JavaScript
+- HTML
+- CSS
+
+### Data & Cloud
+- Databricks
+- PySpark
+- MySQL
+- MongoDB
+- PostgreSQL
+- Delta Tables
+
 ```
+
+## Contact
+
+📧 Email: reachlaabhgupta@gmail.com
+
+💼 LinkedIn: https://linkedin.com/in/laabhgupta
+
+💻 GitHub: https://github.com/Laabh-Gupta
+
+🌐 Portfolio: https://laabh-portfolio.netlify.app/
+
+---
+
+Designed and developed by **Laabh Gupta**.
