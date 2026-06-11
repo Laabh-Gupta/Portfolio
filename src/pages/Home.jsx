@@ -61,7 +61,7 @@ export default function Home() {
             <a href={personal.github} target="_blank" rel="noreferrer" className="btn btn-outline">GitHub</a>
             <a href={personal.linkedin} target="_blank" rel="noreferrer" className="btn btn-outline">LinkedIn</a>
             <Link to="/projects" target="_blank" rel="noreferrer" className="btn btn-outline">Projects</Link>
-            <a href="/Laabh_Gupta.pdf" download className="btn btn-ghost">↓ Resume</a>
+            <a href="/Laabh_Gupta.pdf" download target="_blank" rel="noreferrer" className="btn btn-outline">↓ Resume</a>
           </div>
         </div>
       </section>
