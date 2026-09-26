@@ -1,0 +1,9 @@
+node_modules
+dist
+dist-ssr
+docs/legacy-portfolio.js
+package-lock.json
+test-results
+playwright-report
+output
+tmp

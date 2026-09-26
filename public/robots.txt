@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://laabh-portfolio.netlify.app/sitemap.xml

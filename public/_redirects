@@ -1,1 +1,7 @@
-/* /index.html 200
+/about /#about 301
+/projects /#projects 301
+/contact /#contact 301
+/GetInTouch /#contact 301
+/Laabh_Gupta.pdf /Laabh_Gupta_Resume.pdf 301!
+/projects/argulab /projects/argulab/index.html 200
+/* /404.html 404
