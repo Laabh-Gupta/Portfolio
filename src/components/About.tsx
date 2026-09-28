@@ -1,63 +1,55 @@
-import { BrainCircuit, Braces, Workflow, ArrowRight } from 'lucide-react';
-import { Reveal, SectionHeading } from './ui';
+import { ArrowUpRight } from 'lucide-react';
+import { Reveal } from './ui';
 
 export default function About() {
   return (
     <section id="about" tabIndex={-1} className="section container about-section">
       <Reveal className="about-layout">
-        <SectionHeading
-          number="01"
-          label="A LITTLE CONTEXT"
-          title="A model is only the beginning."
-        />
+        <div>
+          <p className="eyebrow">
+            <span>03</span> / THE WAY I WORK
+          </p>
+          <h2>
+            The model is
+            <br />
+            just <span>the beginning.</span>
+          </h2>
+        </div>
         <div className="about-copy">
           <p>
-            I’m a Computer Science engineer specializing in AI/ML. My work has grown from academic
-            machine learning projects into enterprise AI and data engineering at EY, alongside
-            building independent AI products.
+            I’m Laabh, an AI & Data Engineer working across machine learning, software and the
+            infrastructure that makes them useful.
           </p>
           <p>
-            I like working across the boundaries: connecting models to useful interfaces, dependable
-            APIs, persistent data and deployment workflows.
+            At EY, that means enterprise data ingestion and experiment visibility. In ArguLab, it
+            means connecting streaming AI to authenticated APIs, persistent memory and an interface
+            people can actually practice with.
           </p>
-          <div className="about-education">
-            <span className="tiny-dot" /> B.Tech, CSE (AI & ML) <span>VIT Chennai · 2022–2026</span>
-          </div>
+          <p>
+            I’m interested in the whole path: what goes into the model, how someone uses its output,
+            and what it takes to keep the application running.
+          </p>
+          <a href="#skills" className="text-link">
+            Explore my engineering toolkit <ArrowUpRight size={17} />
+          </a>
         </div>
       </Reveal>
-      <div className="capabilities">
-        {[
-          {
-            icon: BrainCircuit,
-            title: 'Intelligence',
-            text: 'Models, LLM workflows & evaluation',
-            number: '01',
-          },
-          {
-            icon: Braces,
-            title: 'Applications',
-            text: 'Interfaces, authenticated APIs & data',
-            number: '02',
-          },
-          {
-            icon: Workflow,
-            title: 'Engineering',
-            text: 'Testing, containers & deployment',
-            number: '03',
-          },
-        ].map(({ icon: Icon, title, text, number }) => (
-          <div className="capability" key={title}>
-            <div className="capability-icon">
-              <Icon size={22} />
-            </div>
-            <div>
-              <span className="micro-label">{number}</span>
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </div>
-            <ArrowRight size={17} className="capability-arrow" />
-          </div>
-        ))}
+      <div className="principle-line">
+        <div>
+          <span>01</span>
+          <h3>Understand the data.</h3>
+          <p>Ingestion, representation, context.</p>
+        </div>
+        <div>
+          <span>02</span>
+          <h3>Build the application.</h3>
+          <p>Models, interfaces, APIs, persistence.</p>
+        </div>
+        <div>
+          <span>03</span>
+          <h3>Own the delivery.</h3>
+          <p>Evaluation, testing, deployment.</p>
+        </div>
       </div>
     </section>
   );

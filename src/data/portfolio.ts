@@ -15,7 +15,7 @@ export const personal = {
 export const argulab = {
   live: 'https://argulab.netlify.app/dashboard',
   github: 'https://github.com/Laabh-Gupta/argu-lab',
-  architecture: 'https://github.com/Laabh-Gupta/mindforge-ai-debate',
+  history: 'https://github.com/Laabh-Gupta/argu-lab/blob/main/PROJECT_HISTORY.md',
   subtitle: 'AI communication practice & personalized training platform',
   stack: ['React 19', 'TypeScript', 'Fastify', 'Groq', 'PostgreSQL'],
 };
@@ -428,10 +428,22 @@ export const certifications = [
       'ML lifecycle, DVC, S3, MLflow, Docker, EC2, VPC, load balancers, Gunicorn, Nginx, Kubernetes, KServe, SageMaker, CI/CD and model monitoring.',
   },
   {
-    name: 'Machine Learning Practitioner Learning Plan',
-    issuer: 'Databricks',
-    detail: 'Completed learning plan',
+    name: 'ML Practitioner Series — 6 courses',
+    issuer: 'Databricks Academy',
+    detail: 'Apr–May 2026 · Completed learning plan',
     topics: 'PySpark, MLflow, ML lifecycle and MLOps.',
+  },
+  {
+    name: 'Master LangChain & Gen AI — Build #16 AI Apps HuggingFace LLM',
+    issuer: 'Udemy',
+    detail: '2 Dec 2025 · 10 hours',
+    topics: 'LangChain, generative AI applications and Hugging Face LLMs.',
+  },
+  {
+    name: 'The Complete Full-Stack Web Development Bootcamp',
+    issuer: 'Udemy',
+    detail: '11 Jul 2025 · 61.5 hours',
+    topics: 'Full-stack web development.',
   },
   {
     name: 'Data Structures & Algorithms in Java',

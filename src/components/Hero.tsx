@@ -1,63 +1,91 @@
-import { ArrowDown, ArrowUpRight, Download, MapPin } from 'lucide-react';
-import { Github } from './BrandIcons';
+import { ArrowDown, ArrowUpRight, Download } from 'lucide-react';
+import { Github, Linkedin } from './BrandIcons';
 import { personal } from '../data/portfolio';
 import { ExternalLink } from './ui';
-import SystemVisual from './SystemVisual';
+import Identity from './Identity';
+import IntroLabel from './IntroLabel';
 
 export default function Hero() {
   return (
     <section className="hero container" aria-labelledby="hero-title">
       <div className="hero-main">
         <div className="hero-copy">
-          <a className="current-status" href="#experience">
-            <span className="status-dot" />
-            <span>
-              Currently <strong>AI & Data Engineer @ EY GDS</strong>
-            </span>
-            <ArrowUpRight size={14} />
-          </a>
-          <p className="hero-kicker">ENGINEERING INTELLIGENCE. END TO END.</p>
+          <IntroLabel />
           <h1 id="hero-title">
-            Laabh Gupta<span>.</span>
+            Laabh{' '}
+            <span>
+              Gupta<span className="name-period">.</span>
+            </span>
           </h1>
           <p className="hero-roles">
-            AI/ML Engineer <span>/</span> Software Engineer
+            AI/ML Engineer <span> / </span> Software Engineer
             <br />
             <span className="role-secondary">MLOps & DevOps</span>
           </p>
           <p className="hero-description">
-            Building AI systems, full-stack products and
-            <br className="desktop-break" /> production-oriented ML infrastructure.
+            I build AI that goes beyond the model.
+            <br />
+            Enterprise data systems. Personalized AI products.
+            <br className="desktop-break" /> The engineering that connects them.
           </p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#argulab">
-              View ArguLab <ArrowUpRight size={18} />
+            <a
+              className="button button-primary magnetic-button"
+              href="#projects"
+              onPointerMove={(e) => {
+                if (
+                  e.pointerType !== 'mouse' ||
+                  !matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)').matches
+                )
+                  return;
+                const box = e.currentTarget.getBoundingClientRect();
+                e.currentTarget.style.translate = `${(e.clientX - box.left - box.width / 2) * 0.04}px ${(e.clientY - box.top - box.height / 2) * 0.08}px`;
+              }}
+              onPointerLeave={(e) => {
+                e.currentTarget.style.translate = '';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.translate = '';
+              }}
+            >
+              Explore my work <ArrowUpRight size={19} />
             </a>
-            <ExternalLink href={personal.github} className="button button-secondary" arrow={false}>
-              <Github size={17} />
-              View GitHub
-            </ExternalLink>
+            <a className="button button-secondary" href={personal.resume} download>
+              Download resume <Download size={17} />
+            </a>
           </div>
-          <div className="hero-secondary">
-            <a href={personal.resume} download>
-              <Download size={15} />
-              Download resume
-            </a>
-            <span />
-            <a href="#contact">
-              Contact me <ArrowUpRight size={14} />
+          <div className="hero-socials">
+            <ExternalLink href={personal.github} className="text-link" arrow={false}>
+              <Github size={16} /> GitHub
+            </ExternalLink>
+            <ExternalLink href={personal.linkedin} className="text-link" arrow={false}>
+              <Linkedin size={16} /> LinkedIn
+            </ExternalLink>
+            <a href="#contact" className="text-link">
+              Let’s talk <ArrowUpRight size={16} />
             </a>
           </div>
         </div>
-        <SystemVisual />
+        <Identity />
       </div>
-      <div className="hero-foot">
-        <span>
-          <MapPin size={14} />
-          Kanpur, India <span className="foot-divider">/</span> Building across the stack
-        </span>
-        <a href="#about">
-          Explore the work <ArrowDown size={15} />
+      <div className="hero-index">
+        <a href="#experience">
+          <span className="micro-label">
+            <span className="status-dot" /> CURRENTLY
+          </span>
+          <strong>
+            AI & Data Engineer <span>@ EY GDS</span>
+          </strong>
+        </a>
+        <a href="#argulab">
+          <span className="micro-label">FLAGSHIP PROJECT</span>
+          <strong>
+            ArguLab <span>— Personalized AI practice</span>
+          </strong>
+        </a>
+        <a href="#projects" className="scroll-cue" aria-label="Explore the work">
+          <span>Explore the work</span>
+          <ArrowDown size={18} />
         </a>
       </div>
     </section>

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, AudioLines, Check } from 'lucide-react';
-import { Github } from './BrandIcons';
+import { ArrowRight, AudioLines } from 'lucide-react';
 import { argulab, personal, selectedProjects } from '../data/portfolio';
 import { ExternalLink, Reveal, SectionHeading, Tags } from './ui';
 import ArgulabPreview from './ArgulabPreview';
+import GlowCard from './GlowCard';
 
 export default function Projects() {
   const [filter, setFilter] = useState('All work');
@@ -12,52 +12,35 @@ export default function Projects() {
     (project) => filter === 'All work' || project.category === filter,
   );
   return (
-    <section id="projects" tabIndex={-1} className="section container">
+    <section id="projects" tabIndex={-1} className="section container projects-section">
       <div className="section-heading-row">
         <SectionHeading
-          number="02"
+          number="01"
           label="SELECTED WORK"
-          title="Ideas, engineered into products."
+          title="Built to be used."
+          description="AI products, applied machine learning, and the systems around them."
         />
-        <span className="section-side-note">WHAT I BUILT. HOW IT WORKS.</span>
+        <span className="section-side-note">FROM EXPERIMENT TO APPLICATION</span>
       </div>
       <Reveal>
-        <article id="argulab" tabIndex={-1} className="glass featured-project">
+        <GlowCard id="argulab" tabIndex={-1} className="featured-project">
           <div className="featured-copy">
-            <div className="project-eyebrow">
-              <span className="flagship-badge">
-                <span className="tiny-dot" />
-                FLAGSHIP PROJECT
-              </span>
-              <span className="micro-label">01 / AI PRODUCT</span>
-            </div>
+            <p className="eyebrow">
+              <span className="tiny-dot" /> FLAGSHIP / DEPLOYED AI PRODUCT
+            </p>
             <h3>
               ArguLab<span className="brand-dot">.</span>
             </h3>
             <p className="project-subtitle">
-              AI communication practice.
+              Better conversations.
               <br />
-              Personalized with every session.
+              <span>Built on what came before.</span>
             </p>
             <p className="project-description">
-              A complete training platform with nine practice modes, structured AI feedback and
-              persistent user context that shapes the next conversation.
+              Nine AI practice modes. Streaming conversations. A personalization loop that remembers
+              your strengths, weaknesses and previous sessions.
             </p>
             <Tags items={argulab.stack} />
-            <div className="project-features">
-              <span>
-                <Check size={14} />
-                Adaptive training loop
-              </span>
-              <span>
-                <Check size={14} />
-                Voice + text interaction
-              </span>
-              <span>
-                <Check size={14} />
-                Mobile-first experience
-              </span>
-            </div>
             <div className="project-actions">
               <Link to="/projects/argulab" className="button button-primary">
                 Explore case study <ArrowRight size={17} />
@@ -66,58 +49,70 @@ export default function Projects() {
                 Open live app
               </ExternalLink>
             </div>
-            <div className="project-quality">
-              <span className="quality-mark">
-                <Check size={12} />
-              </span>
-              <span>v3.0.1 verification</span>
-              <strong>47</strong> unit / integration <span className="quality-separator">·</span>
-              <strong>21</strong> browser tests
-            </div>
+            <ExternalLink href={argulab.github} className="project-source text-link">
+              GitHub / Product guide
+            </ExternalLink>
           </div>
           <ArgulabPreview />
-        </article>
+          <div className="project-quality">
+            <div>
+              <strong>09</strong>
+              <span>AI practice modes</span>
+            </div>
+            <div>
+              <strong>47</strong>
+              <span>Unit / integration tests</span>
+            </div>
+            <div>
+              <strong>21</strong>
+              <span>Playwright browser tests</span>
+            </div>
+            <p>
+              Documented verification
+              <br />
+              <span>Release v3.0.1</span>
+            </p>
+          </div>
+        </GlowCard>
       </Reveal>
       <Reveal>
-        <article className="glass voice-project">
+        <GlowCard className="voice-project">
           <div className="voice-visual" aria-hidden="true">
             <div className="voice-visual-label">
-              <AudioLines size={17} /> SIGNAL → SPECTROGRAM → MODEL
+              <AudioLines size={19} /> SIGNAL / REPRESENTATION / INFERENCE
             </div>
             <div className="spectrogram">
               {Array.from({ length: 62 }, (_, i) => (
                 <i
                   key={i}
                   style={{
-                    height: `${25 + ((i * 17 + (i % 8) * 13) % 76)}%`,
-                    opacity: 0.25 + ((i * 7) % 7) / 10 + (i % 3) * 0.19,
+                    height: `${15 + ((i * 17 + (i % 8) * 13) % 76)}%`,
+                    opacity: 0.25 + (i % 4) * 0.18,
                   }}
                 />
               ))}
             </div>
-            <div className="voice-visual-foot">
-              <span>DEEP LEARNING / AUDIO</span>
-              <span>01: HUMAN OR SYNTHETIC</span>
+            <div className="voice-pipeline">
+              <span>Audio</span>
+              <ArrowRight size={15} />
+              <span>Mel spectrogram</span>
+              <ArrowRight size={15} />
+              <span>CNN / ViT</span>
             </div>
           </div>
           <div className="voice-copy">
-            <p className="eyebrow">
-              <span>02</span> / FEATURED PROJECT
-            </p>
-            <div className="voice-title">
-              <h3>Voice Anti-Spoofing</h3>
-              <span className="accuracy">
-                <strong>99.75%</strong>test accuracy
-              </span>
-            </div>
+            <p className="eyebrow">02 / APPLIED MACHINE LEARNING</p>
+            <h3>Human or synthetic?</h3>
+            <p className="voice-project-name">Voice Anti-Spoofing System</p>
             <p>
-              Distinguishing AI-generated speech from genuine human speech. An
-              audio-to-Mel-Spectrogram pipeline with CNNs, Vision Transformers and data
-              augmentation, delivered through a full-stack application.
+              A PyTorch pipeline that distinguishes AI-generated voices from human speech, using Mel
+              spectrograms, CNNs, a Vision Transformer and data augmentation.
             </p>
             <Tags items={['PyTorch', 'CNN / ViT', 'FastAPI', 'React']} />
             <div className="voice-bottom">
-              <span>Project Lead · Dec 2024 – Mar 2025</span>
+              <span className="accuracy">
+                <strong>99.75%</strong> test-set accuracy
+              </span>
               <ExternalLink
                 href={`${personal.github}/Voice-Anti-Spoofing-Web-App`}
                 className="text-link"
@@ -126,15 +121,16 @@ export default function Projects() {
               </ExternalLink>
             </div>
             <p className="metric-note">
-              Reported project test-set accuracy; performance depends on the evaluation data.
+              Project Lead · Dec 2024 – Mar 2025. Reported test performance; results depend on the
+              evaluation data.
             </p>
           </div>
-        </article>
+        </GlowCard>
       </Reveal>
       <div className="selected-work-heading">
         <div>
-          <h3>More from the workbench</h3>
-          <p>Earlier explorations in machine learning and software.</p>
+          <h3>From the workbench</h3>
+          <p>More explorations in machine learning and software.</p>
         </div>
         <div className="filters" role="group" aria-label="Filter selected projects">
           {['All work', 'AI / ML', 'Software'].map((item) => (
@@ -146,23 +142,23 @@ export default function Projects() {
       </div>
       <div className="selected-projects" aria-live="polite">
         {projects.map((project) => (
-          <article className="selected-project" key={project.name}>
-            <div className="selected-top">
-              <span className="micro-label">{project.type}</span>
-              <Github size={17} />
+          <GlowCard className="selected-project" key={project.name}>
+            <span className="project-number">0{selectedProjects.indexOf(project) + 3}</span>
+            <div>
+              <p className="micro-label">{project.type}</p>
+              <h4>
+                <ExternalLink href={project.github}>{project.name}</ExternalLink>
+              </h4>
+              <p className="selected-description">{project.description}</p>
             </div>
-            <h4>
-              <ExternalLink href={project.github}>{project.name}</ExternalLink>
-            </h4>
-            <p>{project.description}</p>
             <Tags items={project.stack} />
-          </article>
+          </GlowCard>
         ))}
       </div>
       <div className="projects-footer">
-        <span>Curiosity, with a commit history.</span>
+        <span>More ideas. More commits.</span>
         <ExternalLink href={personal.github} className="text-link">
-          All repositories <ArrowUpRight size={15} />
+          All repositories
         </ExternalLink>
       </div>
     </section>

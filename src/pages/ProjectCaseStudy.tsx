@@ -188,8 +188,8 @@ export default function ProjectCaseStudy() {
         <ExternalLink href={argulab.github} className="text-link">
           Public product repository
         </ExternalLink>
-        <ExternalLink href={argulab.architecture} className="text-link">
-          Code & architecture repository
+        <ExternalLink href={argulab.history} className="text-link">
+          Public development history
         </ExternalLink>
         <Link to="/#contact" className="text-link">
           Talk about the engineering <ArrowUpRight size={16} />

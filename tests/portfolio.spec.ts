@@ -161,7 +161,10 @@ test('resume download, metadata, deep routes and static content', async ({ page,
     expect(html).toContain('og:image');
     expect(html).toContain('<h1');
     expect(html).toContain(`data-route="${path}"`);
-    expect(html).toContain(path === '/' ? 'Laabh Gupta<span' : 'ArguLab<span');
+    const serverHeading = html
+      .match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/)?.[1]
+      .replace(/<!--[\s\S]*?-->|<[^>]+>/g, '');
+    expect(serverHeading).toBe(path === '/' ? 'Laabh Gupta.' : 'ArguLab.');
     expect(html).not.toContain('<!--app-html-->');
   }
   for (const path of [
@@ -194,9 +197,16 @@ test('reduced motion disables CSS animation and smooth scroll', async ({ page })
     'auto',
   );
   expect(
-    await page.locator('.stack-top').evaluate((el) => getComputedStyle(el).animationName),
+    await page.locator('.identity-fallback').evaluate((el) => getComputedStyle(el).animationName),
   ).toBe('none');
   await expect(page.locator('html')).not.toHaveClass(/lenis/);
+  await expect(page.locator('.identity-stage')).toHaveAttribute('data-render', 'static');
+  await expect(page.locator('.identity-stage canvas')).toHaveCount(0);
+  expect(
+    await page.evaluate(() =>
+      performance.getEntriesByType('resource').some((r) => r.name.includes('/assets/scene-')),
+    ),
+  ).toBe(false);
 });
 
 test('motion preference changes clean up smooth scrolling without breaking navigation', async ({

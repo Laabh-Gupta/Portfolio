@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ArrowUpRight, Check, Copy, Mail, MapPin } from 'lucide-react';
-import { Github, Linkedin } from './BrandIcons';
+import { ArrowUpRight, Check, Copy } from 'lucide-react';
 import { personal } from '../data/portfolio';
 import { ExternalLink } from './ui';
+import FlowField from './FlowField';
 
 export default function Contact() {
   const [copyState, setCopyState] = useState('');
@@ -15,61 +15,52 @@ export default function Contact() {
     }
   }
   return (
-    <section id="contact" tabIndex={-1} className="section container contact-section">
-      <div className="glass contact-panel">
-        <div>
+    <section id="contact" tabIndex={-1} className="contact-section">
+      <div className="container contact-panel">
+        <FlowField />
+        <div className="contact-heading">
           <p className="eyebrow">
             <span>06</span> / START A CONVERSATION
           </p>
           <h2>
-            Let’s build something
+            What are
             <br />
-            <span>intelligent.</span>
+            you <span>building?</span>
           </h2>
           <p>
-            Have an AI product, an engineering challenge or
-            <br className="desktop-break" /> an idea worth exploring? Let’s talk.
+            AI products, data systems, and engineering challenges.
+            <br />
+            I’d like to hear what you have in mind.
           </p>
-          <div className="contact-actions">
-            <a href={`mailto:${personal.email}`} className="button button-primary">
-              <Mail size={17} />
-              Email me
-              <ArrowUpRight size={17} />
-            </a>
-            <ExternalLink
-              href={personal.linkedin}
-              className="button button-secondary"
-              arrow={false}
-            >
-              <Linkedin size={17} />
-              LinkedIn
-            </ExternalLink>
-            <ExternalLink href={personal.github} className="icon-button" arrow={false}>
-              <Github size={19} />
-              <span className="sr-only">GitHub</span>
-            </ExternalLink>
-          </div>
+          <a href={`mailto:${personal.email}`} className="button button-primary">
+            Let’s talk <ArrowUpRight size={19} />
+          </a>
         </div>
         <div className="contact-details">
-          <span className="contact-orbit" aria-hidden="true">
-            <span />
-            <ArrowUpRight size={48} />
-          </span>
+          <ArrowUpRight className="contact-arrow" size={100} strokeWidth={0.7} aria-hidden="true" />
+          <span className="micro-label">THE BEST WAY TO REACH ME</span>
           <div className="email-copy">
             <a href={`mailto:${personal.email}`}>{personal.email}</a>
             <button className="icon-button" onClick={copyEmail} aria-label="Copy email address">
-              {copyState === 'Email copied' ? <Check size={16} /> : <Copy size={16} />}
+              {copyState === 'Email copied' ? <Check size={18} /> : <Copy size={18} />}
             </button>
           </div>
-          <span className="copy-status" role="status">
+          <span role="status" className="copy-status">
             {copyState}
           </span>
-          <span className="contact-location">
-            <MapPin size={14} />
+          <div className="contact-socials">
+            <ExternalLink href={personal.linkedin} className="text-link">
+              LinkedIn
+            </ExternalLink>
+            <ExternalLink href={personal.github} className="text-link">
+              GitHub
+            </ExternalLink>
+          </div>
+          <p className="contact-location">
             {personal.location}
-            <span>·</span>
+            <span> / </span>
             <a href="tel:+919793084444">{personal.phone}</a>
-          </span>
+          </p>
         </div>
       </div>
     </section>

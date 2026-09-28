@@ -8,7 +8,7 @@ export default function Proof() {
       <SectionHeading
         number="05"
         label="FOUNDATIONS & CONTINUED LEARNING"
-        title="Always building on the fundamentals."
+        title="Education & continued learning."
       />
       <div className="proof-grid">
         <div className="education-block">
