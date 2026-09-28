@@ -1,3 +1,5 @@
+> Historical implementation notes from before the September 29 redesign. See [REDESIGN.md](REDESIGN.md) for the current design and verification.
+
 # Portfolio redesign — September 2026
 
 ## Audit and decisions
