@@ -159,7 +159,7 @@ test('project spotlight is local and retains native touch scrolling', async ({ p
   const card = page.locator('#argulab');
   await expect(card).toBeVisible();
   const box = (await card.boundingBox())!;
-  await page.mouse.move(box.x + box.width * 0.6, Math.max(130, box.y + 80));
+  await card.hover({ position: { x: box.width * 0.6, y: 80 } });
   await expect
     .poll(() =>
       card.evaluate((el) =>

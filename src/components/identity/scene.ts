@@ -1,5 +1,8 @@
 import {
   ACESFilmicToneMapping,
+  Color,
+  MeshBasicMaterial,
+  PlaneGeometry,
   DirectionalLight,
   Group,
   HemisphereLight,
@@ -12,7 +15,6 @@ import {
   WebGLRenderer,
   WebGLRenderTarget,
 } from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createMonogram } from './model';
 
 export interface IdentityScene {
@@ -60,7 +62,7 @@ export function mountIdentityScene(
     return null;
   }
   const scene = new Scene();
-  const camera = new OrthographicCamera(-2.6, 2.6, 2.6, -2.6, 0.1, 30);
+  const camera = new OrthographicCamera(-2.2, 2.2, 2.2, -2.2, 0.1, 30);
   camera.position.set(0, 0, 8);
   let environment: WebGLRenderTarget | undefined;
   let model: Group;
@@ -68,22 +70,38 @@ export function mountIdentityScene(
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.12;
     const pmrem = new PMREMGenerator(renderer);
-    const room = new RoomEnvironment();
+    const studio = new Scene();
+    studio.background = new Color('#242424');
+    const softboxes = [
+      { x: -3.5, y: 2, z: 5, width: 3, height: 9, light: 5 },
+      { x: 4, y: 1, z: 3, width: 2, height: 8, light: 3 },
+      { x: 0, y: 6, z: 1, width: 8, height: 3, light: 4 },
+      { x: 0, y: -4, z: 3, width: 6, height: 1, light: 1.5 },
+    ];
+    softboxes.forEach(({ x, y, z, width, height, light }) => {
+      const panel = new Mesh(
+        new PlaneGeometry(width, height),
+        new MeshBasicMaterial({ color: new Color().setScalar(light) }),
+      );
+      panel.position.set(x, y, z);
+      panel.lookAt(0, 0, 0);
+      studio.add(panel);
+    });
     try {
-      environment = pmrem.fromScene(room, 0.05);
+      environment = pmrem.fromScene(studio, 0.08);
       scene.environment = environment.texture;
     } finally {
-      room.dispose();
+      disposeModel(studio);
       pmrem.dispose();
     }
     model = modelFactory();
-    model.rotation.set(0.12, -0.32, -0.07);
-    scene.add(model, new HemisphereLight('#cce7f8', '#17232e', 1.1));
-    const key = new DirectionalLight('#edf2f6', 3.5);
+    model.rotation.set(0.18, -0.38, -0.12);
+    scene.add(model, new HemisphereLight('#ffffff', '#222222', 1.4));
+    const key = new DirectionalLight('#ffffff', 4);
     key.position.set(-3, 5, 5);
-    const rim = new DirectionalLight('#98d6de', 4);
+    const rim = new DirectionalLight('#ffffff', 6);
     rim.position.set(4, -1, 2);
     scene.add(key, rim);
   } catch {
@@ -97,8 +115,8 @@ export function mountIdentityScene(
   let visible = true;
   let disposed = false;
   let frame = 0;
-  let targetX = 0.12;
-  let targetY = -0.32;
+  let targetX = 0.18;
+  let targetY = -0.38;
   let lastFrame = 0;
   function render(now: number) {
     frame = 0;
@@ -125,8 +143,8 @@ export function mountIdentityScene(
     const { width, height } = host.getBoundingClientRect();
     if (!width || !height) return;
     const aspect = width / height;
-    camera.left = -2.65 * aspect;
-    camera.right = 2.65 * aspect;
+    camera.left = -2.2 * aspect;
+    camera.right = 2.2 * aspect;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
     invalidate();
@@ -134,13 +152,13 @@ export function mountIdentityScene(
   const move = (event: PointerEvent) => {
     if (event.pointerType !== 'mouse') return;
     const rect = host.getBoundingClientRect();
-    targetX = 0.12 + ((event.clientY - rect.top - rect.height / 2) / rect.height) * 0.22;
-    targetY = -0.32 + ((event.clientX - rect.left - rect.width / 2) / rect.width) * 0.5;
+    targetX = 0.18 + ((event.clientY - rect.top - rect.height / 2) / rect.height) * 0.22;
+    targetY = -0.38 + ((event.clientX - rect.left - rect.width / 2) / rect.width) * 0.5;
     invalidate();
   };
   const leave = () => {
-    targetX = 0.12;
-    targetY = -0.32;
+    targetX = 0.18;
+    targetY = -0.38;
     invalidate();
   };
   const visibility = () => {

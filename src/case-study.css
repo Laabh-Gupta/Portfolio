@@ -116,7 +116,7 @@
 .mode-card {
   border: 1px solid var(--border);
   border-radius: 5px;
-  background: #121e27;
+  background: #1c1c1c;
 }
 .mode-card summary {
   display: flex;
@@ -187,7 +187,7 @@
   gap: 16px;
   padding: 21px 8px;
   min-width: 0;
-  background: #0e1820;
+  background: #161616;
   border: 1px solid var(--border);
   border-radius: 5px;
   color: var(--muted);
@@ -196,7 +196,7 @@
 .loop-steps > button[aria-pressed='true'] {
   color: var(--foreground);
   border-color: var(--accent-strong);
-  background: #a4cee80f;
+  background: #c7c7c70f;
 }
 .loop-steps > button[aria-pressed='true'] > svg:not(.loop-arrow) {
   color: var(--accent);
@@ -278,7 +278,7 @@
 }
 .tab-button[data-active] {
   color: var(--accent);
-  background: #a4cee80c;
+  background: #c7c7c70c;
   border-color: var(--border-bright);
 }
 .architecture-panel {
@@ -296,7 +296,7 @@
   padding: 21px 17px;
   border: 1px solid var(--border-bright);
   border-radius: 5px;
-  background: #101d26;
+  background: #1b1b1b;
 }
 .architecture-node > svg {
   color: var(--accent);
@@ -491,7 +491,7 @@
   gap: 25px;
   padding: 35px;
   margin-top: 85px;
-  background: #14232c;
+  background: #202020;
 }
 .case-closing > svg {
   color: var(--accent);
@@ -518,4 +518,353 @@
 }
 .case-source-links .text-link {
   font-size: 11px;
+}
+
+/* Case-study responsive contracts preserved from the verified baseline. */
+@media (max-width: 1150px) {
+  .case-hero {
+    gap: 40px;
+  }
+  .architecture-panel {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 25px;
+  }
+  .architecture-diagram {
+    padding: 20px;
+  }
+  .architecture-node {
+    padding: 16px 13px;
+    flex-wrap: wrap;
+  }
+  .ai-workflows,
+  .quality-panel {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 900px) {
+  .case-hero {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  .case-hero h1 {
+    font-size: 87px;
+  }
+  .case-hero > div > p:not([class]) {
+    max-width: 620px;
+  }
+  .case-problem {
+    gap: 40px;
+  }
+  .case-section h2 {
+    font-size: 35px;
+  }
+  .case-summary {
+    gap: 15px;
+  }
+  .case-summary strong {
+    font-size: 10px;
+  }
+  .modes-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .training-loop {
+    padding: 26px;
+  }
+  .loop-steps {
+    gap: 15px;
+  }
+  .loop-steps > button {
+    font-size: 9px;
+  }
+  .loop-arrow {
+    right: -16px;
+    width: 14px;
+  }
+  .architecture-panel {
+    grid-template-columns: 1fr;
+  }
+  .architecture-notes {
+    flex-direction: row;
+    gap: 25px;
+  }
+  .architecture-notes > div {
+    flex: 1;
+  }
+  .architecture-notes h4 {
+    font-size: 16px;
+  }
+  .architecture-notes p {
+    font-size: 11px;
+  }
+  .ai-workflows,
+  .quality-panel {
+    grid-template-columns: 1fr 1fr;
+  }
+  .workflow-card,
+  .quality-card {
+    padding: 25px;
+  }
+  .workflow-card h4,
+  .quality-card h4 {
+    font-size: 23px;
+  }
+  .decision-grid {
+    gap: 24px;
+  }
+  .decision-grid h3 {
+    font-size: 21px;
+  }
+  .case-closing {
+    flex-wrap: wrap;
+    padding: 28px;
+  }
+  .case-closing .button {
+    margin-left: 0;
+  }
+}
+@media (max-width: 600px) {
+  .case-study {
+    padding-top: 12px;
+    padding-bottom: 50px;
+  }
+  .case-hero {
+    padding-block: 30px 40px;
+    gap: 35px;
+  }
+  .case-hero .eyebrow {
+    font-size: 7px;
+    align-items: flex-start;
+    max-width: 280px;
+  }
+  .case-hero .eyebrow > .tiny-dot {
+    margin-top: 4px;
+  }
+  .case-hero h1 {
+    font-size: 70px;
+    margin-top: 23px;
+  }
+  .case-subtitle {
+    font-size: 27px;
+    margin-top: 20px;
+  }
+  .case-hero p:not([class]) {
+    font-size: 13px;
+    margin-block: 20px;
+  }
+  .case-actions {
+    gap: 9px;
+    margin-top: 23px;
+  }
+  .case-actions .button {
+    font-size: 11px;
+    padding-inline: 15px;
+    gap: 9px;
+  }
+  .case-summary {
+    grid-template-columns: 1fr 1fr;
+    gap: 23px 17px;
+    padding-block: 23px;
+  }
+  .case-summary > div {
+    border: none;
+    padding-right: 0;
+  }
+  .case-summary strong {
+    font-size: 11px;
+  }
+  .case-summary span {
+    font-size: 7px;
+  }
+  .case-section {
+    padding-top: 65px;
+  }
+  .case-section h2 {
+    font-size: 32px;
+    margin-top: 18px;
+  }
+  .case-problem {
+    grid-template-columns: 1fr;
+    gap: 23px;
+  }
+  .case-problem > div:last-child {
+    padding-top: 0;
+    font-size: 13px;
+  }
+  .case-section-heading {
+    margin-bottom: 28px;
+  }
+  .case-section-heading > p:last-child {
+    font-size: 12px;
+    margin-top: 17px;
+  }
+  .modes-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .mode-card summary {
+    min-height: 61px;
+    padding: 16px;
+    font-size: 13px;
+  }
+  .mode-card > p {
+    font-size: 12px;
+  }
+  .product-capabilities {
+    gap: 12px 25px;
+    font-size: 10px;
+  }
+  .training-loop {
+    padding: 22px 16px;
+  }
+  .loop-intro {
+    gap: 12px;
+  }
+  .loop-intro h3 {
+    font-size: 20px;
+  }
+  .loop-intro .eyebrow {
+    font-size: 7px;
+  }
+  .loop-steps {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 25px;
+  }
+  .loop-steps > button {
+    flex-direction: row;
+    padding: 12px 14px;
+    font-size: 12px;
+    min-height: 55px;
+    gap: 16px;
+  }
+  .loop-steps > button > svg:not(.loop-arrow) {
+    width: 19px;
+  }
+  .loop-arrow {
+    display: none;
+  }
+  .loop-detail {
+    min-height: 0;
+    padding-top: 23px;
+    margin-top: 24px;
+  }
+  .loop-detail > div {
+    gap: 10px;
+  }
+  .loop-detail > div > svg {
+    width: 18px;
+  }
+  .loop-detail h4 {
+    font-size: 19px;
+  }
+  .loop-detail p {
+    font-size: 12px;
+  }
+  .loop-output {
+    font-size: 8px;
+    gap: 7px;
+  }
+  .loop-return {
+    font-size: 9px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 9px;
+  }
+  .loop-return svg {
+    margin-top: 2px;
+  }
+  .architecture-diagram {
+    padding: 16px;
+  }
+  .architecture-node {
+    padding: 15px 12px;
+    gap: 12px;
+  }
+  .architecture-node h4 {
+    font-size: 15px;
+  }
+  .architecture-node p {
+    font-size: 9px;
+  }
+  .architecture-node span:not(.host-label) {
+    font-size: 7px;
+  }
+  .host-label {
+    margin-left: 0;
+    font-size: 7px;
+  }
+  .architecture-connector {
+    align-items: flex-start;
+    font-size: 8px;
+    padding-block: 13px;
+    gap: 9px;
+  }
+  .architecture-branches {
+    grid-template-columns: 1fr;
+  }
+  .architecture-branches .architecture-node {
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 15px 12px;
+    height: auto;
+  }
+  .architecture-branches .architecture-node p {
+    font-size: 9px;
+  }
+  .diagram-caption {
+    font-size: 9px;
+  }
+  .architecture-notes {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .architecture-notes h4 {
+    font-size: 19px;
+  }
+  .architecture-notes p {
+    font-size: 12px;
+  }
+  .ai-workflows,
+  .quality-panel {
+    grid-template-columns: 1fr;
+  }
+  .workflow-card,
+  .quality-card {
+    padding: 25px 21px;
+  }
+  .workflow-card h4,
+  .quality-card h4 {
+    font-size: 25px;
+  }
+  .workflow-card > p:not([class]),
+  .quality-card > p:not([class]) {
+    font-size: 12px;
+  }
+  .decision-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .decision-grid h3 {
+    font-size: 24px;
+    margin-top: 16px;
+  }
+  .decision-grid p {
+    font-size: 12px;
+  }
+  .case-closing {
+    padding: 25px 20px;
+    gap: 18px;
+    margin-top: 55px;
+  }
+  .case-closing h2 {
+    font-size: 26px;
+  }
+  .case-closing p {
+    font-size: 12px;
+  }
+  .case-source-links {
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 19px;
+  }
 }

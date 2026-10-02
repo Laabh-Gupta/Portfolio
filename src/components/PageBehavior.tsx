@@ -50,14 +50,23 @@ export default function PageBehavior() {
     } catch {
       /* A malformed external hash must not break navigation. */
     }
-    const frame = requestAnimationFrame(() => {
-      if (id) {
-        const element = document.getElementById(id);
-        element?.scrollIntoView({ behavior: 'instant' });
-        element?.focus({ preventScroll: true });
-      } else window.scrollTo({ top: 0, behavior: 'instant' });
+    let cancelled = false;
+    let frame = 0;
+    // Resolve anchor positions after the self-hosted fonts finish changing the layout.
+    void document.fonts.ready.then(() => {
+      if (cancelled) return;
+      frame = requestAnimationFrame(() => {
+        if (id) {
+          const element = document.getElementById(id);
+          element?.scrollIntoView({ behavior: 'instant' });
+          element?.focus({ preventScroll: true });
+        } else window.scrollTo({ top: 0, behavior: 'instant' });
+      });
     });
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+    };
   }, [location]);
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: no-preference) and (pointer: fine)');

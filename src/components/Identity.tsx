@@ -4,58 +4,63 @@ import type { IdentityScene } from './identity/scene';
 function IdentityArtwork() {
   const id = useId().replaceAll(':', '');
   const shape =
-    'M70 70H125V239H211V294H70Z M396 70H270L236 104V260L270 294H396V168H316V217H342V240H291V124H396Z';
+    'M45 76H104V239Q104 251 116 251H200V307H69Q45 307 45 283Z M412 117C362 46 242 52 204 141C159 245 232 321 323 311C395 306 434 260 434 204V170H313V219H373C352 282 267 276 255 204C241 128 337 98 371 155Z';
   return (
     <svg
       className="identity-fallback"
       data-testid="identity-fallback"
-      viewBox="0 0 500 420"
+      viewBox="0 0 500 400"
       fill="none"
     >
       <defs>
         <linearGradient
           id={id + 'face'}
-          x1="100"
-          y1="60"
-          x2="345"
-          y2="320"
+          x1="90"
+          y1="50"
+          x2="335"
+          y2="330"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#e0eaf0" />
-          <stop offset=".25" stopColor="#90a8b7" />
-          <stop offset=".6" stopColor="#425c6c" />
-          <stop offset="1" stopColor="#a4cee8" />
+          <stop stopColor="#ffffff" />
+          <stop offset=".2" stopColor="#dededb" />
+          <stop offset=".4" stopColor="#737373" />
+          <stop offset=".49" stopColor="#b8b8b6" />
+          <stop offset=".54" stopColor="#fafafa" />
+          <stop offset=".8" stopColor="#999997" />
+          <stop offset="1" stopColor="#eaeae7" />
         </linearGradient>
         <linearGradient
           id={id + 'edge'}
           x1="100"
-          y1="100"
-          x2="380"
+          y1="70"
+          x2="390"
           y2="350"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#405e70" />
-          <stop offset=".6" stopColor="#14232e" />
-          <stop offset="1" stopColor="#659bbd" />
+          <stop stopColor="#9c9c9a" />
+          <stop offset=".35" stopColor="#303030" />
+          <stop offset=".65" stopColor="#080808" />
+          <stop offset=".88" stopColor="#929290" />
+          <stop offset="1" stopColor="#303030" />
         </linearGradient>
       </defs>
-      <g transform="translate(4 12) rotate(-8 250 200) skewY(5)">
-        {Array.from({ length: 22 }, (_, i) => (
+      <g transform="translate(-5 -4) rotate(-10 250 200) skewY(4)">
+        {Array.from({ length: 32 }, (_, i) => (
           <path
             key={i}
             d={shape}
-            transform={`translate(${22 - i} ${(22 - i) * 0.8})`}
+            transform={`translate(${32 - i} ${(32 - i) * 0.9})`}
             fill={`url(#${id}edge)`}
           />
         ))}
         <path
           d={shape}
           fill={`url(#${id}face)`}
-          stroke="#b3d3e6"
-          strokeWidth="1.2"
+          stroke="#d6d6d3"
+          strokeWidth="1.5"
           strokeLinejoin="round"
         />
-        <path d={shape} fill="none" stroke="#edf2f6" strokeOpacity=".18" strokeWidth="3" />
+        <path d={shape} fill="none" stroke="#ffffff" strokeOpacity=".15" strokeWidth="5" />
       </g>
     </svg>
   );
@@ -131,16 +136,15 @@ export default function Identity() {
     <figure className="identity">
       <div className="identity-stage" ref={ref} data-render="static" aria-hidden="true">
         <div className="identity-halo" />
-        <div className="identity-orbit orbit-one" />
-        <div className="identity-orbit orbit-two" />
+
         <IdentityArtwork />
-        <span className="identity-coordinate coordinate-top">LG — 01</span>
-        <span className="identity-coordinate coordinate-side">INTELLIGENCE / ENGINEERED</span>
+        <span className="identity-coordinate coordinate-top">OBJECT 001 / LG</span>
+        <span className="identity-coordinate coordinate-side">FORM FOLLOWS FUNCTION</span>
         <span className="identity-shadow" />
         <span className="identity-loading">Preparing interactive view</span>
       </div>
       <figcaption>
-        <span className="tiny-dot" /> From model to real-world system <span>↗</span>
+        <span className="tiny-dot" /> A study in form & function <span>↗</span>
       </figcaption>
     </figure>
   );

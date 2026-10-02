@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowUpRight, Download, Menu, X } from 'lucide-react';
 import { Dialog } from '@base-ui/react/dialog';
@@ -10,7 +10,11 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
   const [compact, setCompact] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const pill = useRef<HTMLDivElement>(null);
+  const delay = useRef<ReturnType<typeof setTimeout>>(undefined);
   const location = useLocation();
+  const collapsed = compact && !expanded;
   useEffect(() => {
     if (location.pathname !== '/') return;
     const observer = new IntersectionObserver(
@@ -36,8 +40,19 @@ export default function Navbar() {
     return () => {
       observer.disconnect();
       query.removeEventListener('change', close);
+      clearTimeout(delay.current);
     };
   }, []);
+  function expand() {
+    clearTimeout(delay.current);
+    setExpanded(true);
+  }
+  function collapseLater() {
+    clearTimeout(delay.current);
+    delay.current = setTimeout(() => {
+      if (!pill.current?.contains(document.activeElement)) setExpanded(false);
+    }, 450);
+  }
   const navLinks = links.map((label, index) => {
     const id = label.toLowerCase();
     const selected = location.pathname === '/' ? active === id : id === 'projects';
@@ -46,7 +61,10 @@ export default function Navbar() {
         key={id}
         to={`/#${id}`}
         aria-current={selected ? 'location' : undefined}
-        onClick={() => setOpen(false)}
+        onClick={() => {
+          setOpen(false);
+          setExpanded(false);
+        }}
       >
         <span className="mobile-nav-number" aria-hidden="true">
           0{index + 1}
@@ -56,6 +74,10 @@ export default function Navbar() {
       </Link>
     );
   });
+  const activeLabel =
+    location.pathname !== '/'
+      ? 'Case study'
+      : links.find((label) => label.toLowerCase() === active) || 'Overview';
   return (
     <header className={`site-header ${compact ? 'is-compact' : ''}`}>
       <nav className="navbar container" aria-label="Main navigation">
@@ -65,7 +87,37 @@ export default function Navbar() {
           </span>
           <span className="brand-name">Laabh Gupta</span>
         </Link>
-        <div className="desktop-links">{navLinks}</div>
+        <div
+          ref={pill}
+          className="adaptive-nav"
+          data-compact={compact}
+          data-collapsed={collapsed}
+          onPointerEnter={(e) => {
+            if (e.pointerType === 'mouse') expand();
+          }}
+          onPointerLeave={collapseLater}
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) collapseLater();
+          }}
+        >
+          {compact && (
+            <button
+              className="nav-current"
+              aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
+              aria-expanded={!collapsed}
+              aria-controls="desktop-navigation-links"
+              onClick={() => setExpanded((value) => !value)}
+              onFocus={expand}
+            >
+              <span className="tiny-dot" />
+              <span>{activeLabel}</span>
+              <Menu size={13} />
+            </button>
+          )}
+          <div className="desktop-links" id="desktop-navigation-links" inert={collapsed}>
+            {navLinks}
+          </div>
+        </div>
         <a className="nav-resume text-link" href={personal.resume} download>
           Resume <Download size={15} />
         </a>
