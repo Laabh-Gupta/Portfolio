@@ -378,7 +378,7 @@ export const skillGroups: SkillGroup[] = [
       {
         name: 'MLOps Zero to Hero',
         text: '12.5 hours of training covering data versioning, cloud deployment, model management and monitoring.',
-        href: 'https://ude.my/UC-9e829c95-e6db-4262-b425-005e973a13ba',
+        href: 'https://www.udemy.com/certificate/UC-9e829c95-e6db-4262-b425-005e973a13ba/',
       },
     ],
     learning:
@@ -423,7 +423,7 @@ export const certifications = [
     name: 'MLOps Zero to Hero',
     issuer: 'Udemy',
     detail: '14 Sep 2026 · 12.5 hours',
-    href: 'https://ude.my/UC-9e829c95-e6db-4262-b425-005e973a13ba',
+    href: 'https://www.udemy.com/certificate/UC-9e829c95-e6db-4262-b425-005e973a13ba/',
     topics:
       'ML lifecycle, DVC, S3, MLflow, Docker, EC2, VPC, load balancers, Gunicorn, Nginx, Kubernetes, KServe, SageMaker, CI/CD and model monitoring.',
   },

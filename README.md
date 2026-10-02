@@ -80,7 +80,7 @@ No dependencies were added for the monochrome rebuild. React, Three.js, Base UI,
 
 The separate Three.js renderer chunk loads only when the hero is visible on a wide, fine-pointer display without reduced motion. Mobile, touch, and reduced-motion users receive a complete SVG sculpture without downloading the renderer. The same fallback remains visible during loading and after failure.
 
-Custom beveled geometry uses metallic materials and four procedural studio softboxes; no external models, portraits, HDRs, or textures are downloaded. Pixel ratio is capped at 1.5. The renderer responds to input/resize and stops at rest, offscreen, or in a hidden document. Cleanup releases GPU resources, observers, listeners, and the context.
+Custom beveled geometry uses metallic materials, a procedural brushed finish, and four studio softboxes; no external models, portraits, HDRs, or textures are downloaded. Pixel ratio is capped at 1.5. The renderer responds to input/resize and stops at rest, offscreen, or in a hidden document. Cleanup releases GPU resources, observers, listeners, and the context.
 
 To use a supplied face model later, replace the `createMonogram` factory with a centered Three.js `Group` within the documented 4.5 × 3 unit envelope. Update the matching static fallback. Keep interaction and lifecycle code separate; do not fabricate a person's likeness.
 
