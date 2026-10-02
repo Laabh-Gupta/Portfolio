@@ -86,7 +86,7 @@ p('<b>Frontend:</b> React, TypeScript, JavaScript, Vite, Tailwind CSS, HTML, CSS
 p('<b>Data:</b> PostgreSQL, Supabase, Databricks, PySpark, Delta Tables, MySQL, MongoDB. <b>Engineering:</b> Docker, CI/CD, GitHub Actions, Git, GitHub, Bun, Jupyter, VS Code, IntelliJ.')
 p('<b>Training and practice:</b> DVC, Kubernetes, KServe, AWS EC2, S3 and SageMaker through MLOps training; not represented as large-scale production experience.')
 section('Certifications & continued learning')
-p('<b>MLOps Zero to Hero</b> - Udemy | 14 Sep 2026 | 12.5 hours | ' + link('https://ude.my/UC-9e829c95-e6db-4262-b425-005e973a13ba','Certificate') + '<br/>ML lifecycle, data versioning, MLflow, Docker, cloud deployment, Kubernetes, KServe, CI/CD and monitoring.')
+p('<b>MLOps Zero to Hero</b> - Udemy | 14 Sep 2026 | 12.5 hours | ' + link('https://www.udemy.com/certificate/UC-9e829c95-e6db-4262-b425-005e973a13ba/','Certificate') + '<br/>ML lifecycle, data versioning, MLflow, Docker, cloud deployment, Kubernetes, KServe, CI/CD and monitoring.')
 p('<b>Databricks Machine Learning Practitioner Learning Plan</b> - completed learning plan covering PySpark, MLflow, ML lifecycle and MLOps.<br/><b>Data Structures &amp; Algorithms in Java</b> - Great Learning Academy.')
 
 def footer(canvas,doc):

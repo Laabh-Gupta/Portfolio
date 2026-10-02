@@ -5,6 +5,7 @@ import '@fontsource-variable/geist';
 import '@fontsource-variable/geist-mono';
 import 'lenis/dist/lenis.css';
 import './styles.css';
+import './responsive.css';
 import App from './App';
 
 const root = document.getElementById('root')!;

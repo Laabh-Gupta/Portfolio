@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ArrowUpRight, BookOpen, Layers3 } from 'lucide-react';
 import { Tabs } from '@base-ui/react/tabs';
 import { Link } from 'react-router-dom';
@@ -5,6 +6,7 @@ import { skillGroups } from '../data/portfolio';
 import { ExternalLink, SectionHeading, Tags } from './ui';
 
 export default function TechStack() {
+  const [category, setCategory] = useState('ai');
   return (
     <section id="skills" tabIndex={-1} className="section container">
       <SectionHeading
@@ -13,7 +15,29 @@ export default function TechStack() {
         title="A connected stack. Real evidence."
         description="Explore the tools, and the work behind them."
       />
-      <Tabs.Root defaultValue="ai" orientation="vertical" className="glass skill-explorer">
+      <div className="system-path" role="group" aria-label="Explore the engineering lifecycle">
+        {[
+          ['ai', 'Model', 'Learn & infer'],
+          ['frontend', 'Interface', 'Make it useful'],
+          ['backend', 'API', 'Connect the parts'],
+          ['data', 'Data', 'Persist context'],
+          ['mlops', 'Quality', 'Test & track'],
+          ['cloud', 'Delivery', 'Deploy & observe'],
+        ].map(([id, label, detail], i) => (
+          <button key={id} aria-pressed={category === id} onClick={() => setCategory(id)}>
+            <span className="path-number">0{i + 1}</span>
+            <strong>{label}</strong>
+            <span>{detail}</span>
+            <ArrowUpRight size={15} />
+          </button>
+        ))}
+      </div>
+      <Tabs.Root
+        value={category}
+        onValueChange={setCategory}
+        orientation="vertical"
+        className="glass skill-explorer"
+      >
         <Tabs.List className="skill-navigation" aria-label="Technical skill categories">
           {skillGroups.map((group, index) => (
             <Tabs.Tab className="skill-tab" key={group.id} value={group.id}>

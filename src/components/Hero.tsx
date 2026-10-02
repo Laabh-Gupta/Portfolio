@@ -1,63 +1,73 @@
-import { ArrowDown, ArrowUpRight, Download, MapPin } from 'lucide-react';
-import { Github } from './BrandIcons';
+import { ArrowDown, ArrowUpRight, Download } from 'lucide-react';
 import { personal } from '../data/portfolio';
 import { ExternalLink } from './ui';
-import SystemVisual from './SystemVisual';
+import Identity from './Identity';
+import IntroLabel from './IntroLabel';
 
 export default function Hero() {
   return (
     <section className="hero container" aria-labelledby="hero-title">
+      <div className="hero-topline">
+        <IntroLabel />
+        <span className="micro-label">AI / SOFTWARE / SYSTEMS</span>
+      </div>
       <div className="hero-main">
         <div className="hero-copy">
-          <a className="current-status" href="#experience">
-            <span className="status-dot" />
-            <span>
-              Currently <strong>AI & Data Engineer @ EY GDS</strong>
-            </span>
-            <ArrowUpRight size={14} />
-          </a>
-          <p className="hero-kicker">ENGINEERING INTELLIGENCE. END TO END.</p>
-          <h1 id="hero-title">
-            Laabh Gupta<span>.</span>
-          </h1>
           <p className="hero-roles">
-            AI/ML Engineer <span>/</span> Software Engineer
+            AI/ML Engineer · Software Engineer
             <br />
-            <span className="role-secondary">MLOps & DevOps</span>
+            MLOps & DevOps
+          </p>
+          <p className="hero-statement">
+            Intelligence is
+            <br />
+            only the beginning.
           </p>
           <p className="hero-description">
-            Building AI systems, full-stack products and
-            <br className="desktop-break" /> production-oriented ML infrastructure.
+            I build the systems around it.
+            <br />
+            From models and data to products that work.
           </p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#argulab">
-              View ArguLab <ArrowUpRight size={18} />
+            <a className="button button-primary" data-magnetic href="#projects">
+              Explore my work <ArrowUpRight size={18} />
             </a>
-            <ExternalLink href={personal.github} className="button button-secondary" arrow={false}>
-              <Github size={17} />
-              View GitHub
-            </ExternalLink>
-          </div>
-          <div className="hero-secondary">
-            <a href={personal.resume} download>
-              <Download size={15} />
-              Download resume
-            </a>
-            <span />
-            <a href="#contact">
-              Contact me <ArrowUpRight size={14} />
+            <a
+              className="hero-resume text-link"
+              aria-label="Download resume"
+              href={personal.resume}
+              download
+            >
+              Resume <Download size={16} />
             </a>
           </div>
         </div>
-        <SystemVisual />
+        <Identity />
       </div>
-      <div className="hero-foot">
+      <h1 id="hero-title" className="hero-name">
+        <span>Laabh</span>{' '}
         <span>
-          <MapPin size={14} />
-          Kanpur, India <span className="foot-divider">/</span> Building across the stack
+          Gupta<span className="name-period">.</span>
         </span>
-        <a href="#about">
-          Explore the work <ArrowDown size={15} />
+      </h1>
+      <div className="hero-index">
+        <a href="#experience" className="hero-current">
+          <span className="status-dot" />
+          <span>
+            AI & Data Engineer <strong>@ EY GDS</strong>
+          </span>
+        </a>
+        <div className="hero-socials">
+          <ExternalLink href={personal.github} className="text-link">
+            GitHub
+          </ExternalLink>
+          <ExternalLink href={personal.linkedin} className="text-link">
+            LinkedIn
+          </ExternalLink>
+        </div>
+        <a href="#projects" className="scroll-cue" aria-label="Explore the work">
+          <span>SCROLL TO EXPLORE</span>
+          <ArrowDown size={16} />
         </a>
       </div>
     </section>
