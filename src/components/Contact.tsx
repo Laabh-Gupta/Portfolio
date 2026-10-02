@@ -32,7 +32,7 @@ export default function Contact() {
             <br />
             I’d like to hear what you have in mind.
           </p>
-          <a href={`mailto:${personal.email}`} className="button button-primary">
+          <a href={`mailto:${personal.email}`} className="button button-primary" data-magnetic>
             Let’s talk <ArrowUpRight size={19} />
           </a>
         </div>

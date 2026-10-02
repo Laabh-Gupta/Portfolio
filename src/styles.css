@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import './case-study.css';
 @import './sections.css';
+@import './projects.css';
 @theme {
   --color-canvas: #0b0b0b;
   --color-foreground: #f1f0eb;
@@ -796,5 +797,46 @@ summary::-webkit-details-marker {
   }
   html {
     scroll-behavior: auto;
+  }
+}
+
+.glow-card[data-glow='near']::before,
+.glow-card[data-glow='near']::after,
+.glow-card[data-glow='near'] .glow-surface {
+  opacity: 1;
+}
+.glow-card::after {
+  filter: brightness(1.6);
+}
+.glow-card > .glow-surface {
+  background: radial-gradient(
+    520px circle at var(--glow-x) var(--glow-y),
+    #ffffff12,
+    transparent 70%
+  );
+}
+.magnetic-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1000;
+  background: #fff;
+  border-radius: 7px;
+  mix-blend-mode: exclusion;
+  opacity: 0;
+  will-change: transform;
+}
+.magnetic-enabled [data-magnetic] {
+  cursor: none;
+}
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .magnetic-cursor {
+    display: none;
+  }
+  .glow-card::before,
+  .glow-card::after,
+  .glow-card > .glow-surface {
+    display: none;
   }
 }

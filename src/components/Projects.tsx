@@ -1,16 +1,12 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, AudioLines } from 'lucide-react';
-import { argulab, personal, selectedProjects } from '../data/portfolio';
+import { argulab, personal } from '../data/portfolio';
 import { ExternalLink, Reveal, SectionHeading, Tags } from './ui';
 import ArgulabPreview from './ArgulabPreview';
 import GlowCard from './GlowCard';
+import ProjectGallery from './ProjectGallery';
 
 export default function Projects() {
-  const [filter, setFilter] = useState('All work');
-  const projects = selectedProjects.filter(
-    (project) => filter === 'All work' || project.category === filter,
-  );
   return (
     <section id="projects" tabIndex={-1} className="section container projects-section">
       <div className="section-heading-row">
@@ -24,36 +20,42 @@ export default function Projects() {
       </div>
       <Reveal>
         <GlowCard id="argulab" tabIndex={-1} className="featured-project">
-          <div className="featured-copy">
-            <p className="eyebrow">
-              <span className="tiny-dot" /> FLAGSHIP / DEPLOYED AI PRODUCT
-            </p>
-            <h3>
-              ArguLab<span className="brand-dot">.</span>
-            </h3>
-            <p className="project-subtitle">
-              Better conversations.
-              <br />
-              <span>Built on what came before.</span>
-            </p>
-            <p className="project-description">
-              Nine AI practice modes. Streaming conversations. A personalization loop that remembers
-              your strengths, weaknesses and previous sessions.
-            </p>
+          <header className="flagship-heading">
+            <div>
+              <p className="eyebrow">
+                <span className="tiny-dot" /> 01 / FLAGSHIP AI PRODUCT
+              </p>
+              <h3>
+                ArguLab<span className="brand-dot">.</span>
+              </h3>
+            </div>
+            <div className="flagship-intro">
+              <p className="project-subtitle">
+                Better conversations.
+                <br />
+                <span>Built on what came before.</span>
+              </p>
+              <p className="project-description">
+                Nine AI practice modes. Streaming conversations. A personalization loop that
+                remembers your strengths, weaknesses and previous sessions.
+              </p>
+            </div>
+          </header>
+          <ArgulabPreview />
+          <div className="flagship-links">
             <Tags items={argulab.stack} />
             <div className="project-actions">
-              <Link to="/projects/argulab" className="button button-primary">
+              <Link to="/projects/argulab" className="button button-primary" data-magnetic>
                 Explore case study <ArrowRight size={17} />
               </Link>
               <ExternalLink href={argulab.live} className="text-link">
                 Open live app
               </ExternalLink>
+              <ExternalLink href={argulab.github} className="text-link">
+                GitHub / Product guide
+              </ExternalLink>
             </div>
-            <ExternalLink href={argulab.github} className="project-source text-link">
-              GitHub / Product guide
-            </ExternalLink>
           </div>
-          <ArgulabPreview />
           <div className="project-quality">
             <div>
               <strong>09</strong>
@@ -127,40 +129,7 @@ export default function Projects() {
           </div>
         </GlowCard>
       </Reveal>
-      <div className="selected-work-heading">
-        <div>
-          <h3>From the workbench</h3>
-          <p>More explorations in machine learning and software.</p>
-        </div>
-        <div className="filters" role="group" aria-label="Filter selected projects">
-          {['All work', 'AI / ML', 'Software'].map((item) => (
-            <button key={item} aria-pressed={filter === item} onClick={() => setFilter(item)}>
-              {item}
-            </button>
-          ))}
-        </div>
-      </div>
-      <div className="selected-projects" aria-live="polite">
-        {projects.map((project) => (
-          <GlowCard className="selected-project" key={project.name}>
-            <span className="project-number">0{selectedProjects.indexOf(project) + 3}</span>
-            <div>
-              <p className="micro-label">{project.type}</p>
-              <h4>
-                <ExternalLink href={project.github}>{project.name}</ExternalLink>
-              </h4>
-              <p className="selected-description">{project.description}</p>
-            </div>
-            <Tags items={project.stack} />
-          </GlowCard>
-        ))}
-      </div>
-      <div className="projects-footer">
-        <span>More ideas. More commits.</span>
-        <ExternalLink href={personal.github} className="text-link">
-          All repositories
-        </ExternalLink>
-      </div>
+      <ProjectGallery />
     </section>
   );
 }

@@ -52,6 +52,29 @@ export default function Experience() {
                   <p className="micro-label">0{i + 1} / INTERNSHIP PROJECT</p>
                   <h4>{project.name}</h4>
                   <p>{project.description}</p>
+                  <div
+                    className="enterprise-outline"
+                    aria-label={`${project.name} workflow outline`}
+                  >
+                    {(i === 0
+                      ? [
+                          ['Discover', 'Cloud sources'],
+                          ['Configure', 'JSON + agents'],
+                          ['Ingest', 'Databricks'],
+                        ]
+                      : [
+                          ['Track', 'MLflow runs'],
+                          ['Query', 'Delta + SQL'],
+                          ['Compare', 'React + FastAPI'],
+                        ]
+                    ).map(([label, detail], index) => (
+                      <div key={label}>
+                        <span>0{index + 1}</span>
+                        <strong>{label}</strong>
+                        <small>{detail}</small>
+                      </div>
+                    ))}
+                  </div>
                   <div className="experience-stack">
                     {i === 0
                       ? 'Streamlit / Databricks / Unity Catalog / LangChain / REST APIs'

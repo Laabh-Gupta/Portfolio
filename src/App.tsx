@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PageBehavior from './components/PageBehavior';
 import Home from './pages/Home';
+import MagneticCursor from './components/MagneticCursor';
 
 const ProjectCaseStudy = lazy(() => import('./pages/ProjectCaseStudy'));
 
@@ -18,6 +19,7 @@ export default function App() {
         </a>
         <Navbar />
         <PageBehavior />
+        <MagneticCursor />
         <main id="main" tabIndex={-1}>
           <Suspense
             fallback={

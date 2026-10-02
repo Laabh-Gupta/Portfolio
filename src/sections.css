@@ -6,16 +6,6 @@
   padding: 48px 48px 0;
   background: linear-gradient(135deg, #191919, #111);
 }
-.featured-copy {
-  padding-bottom: 42px;
-  position: relative;
-  z-index: 1;
-}
-.featured-copy h3 {
-  font-size: 68px;
-  letter-spacing: -0.065em;
-  margin: 25px 0 19px;
-}
 .project-subtitle {
   font-size: 25px;
   letter-spacing: -0.04em;
@@ -36,11 +26,6 @@
   align-items: center;
   gap: 20px;
   margin-top: 27px;
-}
-.project-source {
-  margin-top: 22px;
-  color: var(--muted);
-  font-size: 10px;
 }
 .project-quality {
   grid-column: 1/-1;
@@ -98,119 +83,6 @@
 .preview-toolbar .micro-label {
   font-size: 7px;
   letter-spacing: 0.02em;
-}
-.preview-workspace {
-  display: grid;
-  grid-template-columns: 130px 1fr;
-}
-.preview-sidebar {
-  display: flex;
-  flex-direction: column;
-  padding: 23px 14px;
-  border-right: 1px solid var(--border);
-  gap: 15px;
-  font-size: 9px;
-  color: var(--muted);
-  background: #111;
-}
-.preview-sidebar > span {
-  display: flex;
-  gap: 7px;
-  align-items: center;
-}
-.preview-sidebar > .micro-label {
-  font-size: 7px;
-  margin-bottom: 12px;
-}
-.preview-sidebar .preview-mode-active {
-  color: var(--foreground);
-}
-.preview-more {
-  font: 8px var(--font-mono);
-  padding-left: 20px;
-}
-.preview-sidebar-bottom {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: auto;
-  font-size: 8px;
-}
-.preview-canvas {
-  padding: 26px 20px;
-  background: radial-gradient(ellipse at top right, #ffffff06, transparent 60%);
-}
-.preview-canvas > .micro-label {
-  font-size: 7px;
-}
-.preview-title {
-  font-size: 22px;
-  letter-spacing: -0.045em;
-  line-height: 1.25;
-  margin: 13px 0 27px;
-}
-.preview-title span {
-  color: var(--muted);
-}
-.preview-session,
-.preview-evaluation,
-.preview-context {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid #ffffff20;
-  border-radius: 5px;
-  padding: 13px 10px;
-  background: #ffffff04;
-}
-.preview-session strong,
-.preview-evaluation strong,
-.preview-context strong {
-  display: block;
-  font-size: 10px;
-  font-weight: 500;
-}
-.preview-session div > span,
-.preview-evaluation div > span,
-.preview-context div > span {
-  display: block;
-  font-size: 8px;
-  color: var(--muted);
-  margin-top: 3px;
-}
-.preview-node-icon {
-  display: grid;
-  place-items: center;
-}
-.waveform {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  height: 30px;
-  margin-left: auto;
-}
-.waveform i {
-  width: 2px;
-  background: #babab3;
-}
-.preview-connector {
-  padding: 5px 0 5px 19px;
-  color: #73736e;
-}
-.preview-context > svg:last-child {
-  margin-left: auto;
-}
-.preview-return {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--muted);
-  font-size: 8px;
-  margin-top: 15px;
-}
-.preview-return > span {
-  flex: 1;
-  border-top: 1px dashed #ffffff30;
 }
 .preview-footer {
   display: flex;
@@ -881,4 +753,166 @@
   height: 100%;
   opacity: 0.28;
   pointer-events: none;
+}
+
+/* The career diagrams summarize supplied workflows, without fabricated system metrics. */
+.enterprise-outline {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 22px;
+  gap: 24px;
+  background: #202020;
+  border-radius: 5px;
+  color: #eee;
+  margin-top: 25px;
+}
+.enterprise-outline > div {
+  position: relative;
+}
+.enterprise-outline > div:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  top: 32px;
+  right: -17px;
+  color: #888;
+  font: 13px var(--font-mono);
+}
+.enterprise-outline span {
+  display: block;
+  font: 8px var(--font-mono);
+  color: #aaa;
+  margin-bottom: 14px;
+}
+.enterprise-outline strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+.enterprise-outline small {
+  display: block;
+  color: #aaa;
+  font: 8px/1.6 var(--font-mono);
+  margin-top: 7px;
+}
+.system-path {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-bottom: 26px;
+  border-block: 1px solid var(--border);
+}
+.system-path button {
+  position: relative;
+  background: none;
+  border: 0;
+  text-align: left;
+  padding: 24px 20px 24px 0;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.system-path button:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  right: 20px;
+  top: 49px;
+  color: var(--faint);
+  font: 15px var(--font-mono);
+}
+.system-path .path-number {
+  display: block;
+  font: 8px var(--font-mono);
+  margin-bottom: 13px;
+}
+.system-path strong {
+  display: block;
+  font-size: 23px;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1.2;
+}
+.system-path button > span:last-of-type {
+  display: block;
+  font: 8px var(--font-mono);
+  margin-top: 10px;
+}
+.system-path button > svg {
+  position: absolute;
+  right: 20px;
+  top: 22px;
+  opacity: 0;
+}
+.system-path button[aria-pressed='true'],
+.system-path button:hover {
+  color: var(--foreground);
+}
+.system-path button[aria-pressed='true'] > svg {
+  opacity: 1;
+}
+.system-path button[aria-pressed='true']::before {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 20px;
+  height: 2px;
+  background: var(--foreground);
+}
+@media (max-width: 900px) {
+  .enterprise-outline {
+    padding: 18px 14px;
+    gap: 18px;
+  }
+  .enterprise-outline strong {
+    font-size: 14px;
+  }
+  .enterprise-outline small {
+    font-size: 7px;
+  }
+  .enterprise-outline > div:not(:last-child)::after {
+    right: -13px;
+    font-size: 11px;
+  }
+  .system-path {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .system-path button:nth-child(3)::after {
+    display: none;
+  }
+  .system-path button:nth-child(-n + 3) {
+    border-bottom: 1px solid var(--border);
+  }
+}
+@media (max-width: 600px) {
+  .enterprise-outline {
+    padding: 22px 18px;
+    gap: 24px;
+  }
+  .enterprise-outline strong {
+    font-size: 15px;
+  }
+  .enterprise-outline small {
+    font-size: 8px;
+  }
+  .enterprise-outline > div:not(:last-child)::after {
+    right: -17px;
+  }
+  .system-path button {
+    padding: 20px 10px 20px 0;
+  }
+  .system-path strong {
+    font-size: 21px;
+  }
+  .system-path button > span:last-of-type {
+    font-size: 7px;
+  }
+  .system-path button > svg {
+    right: 12px;
+    top: 17px;
+    width: 12px;
+  }
+  .system-path button:not(:last-child)::after {
+    right: 9px;
+    top: 43px;
+    font-size: 12px;
+  }
 }

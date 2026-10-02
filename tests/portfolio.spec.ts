@@ -45,6 +45,7 @@ test('home content, responsive layout, console and accessibility', async ({ page
   expect(audit.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) }))).toEqual(
     [],
   );
+  await page.screenshot({ path: info.outputPath('hero.png') });
   await page.screenshot({ path: info.outputPath('home.png'), fullPage: true });
   expect(errors).toEqual([]);
 });
@@ -58,14 +59,20 @@ test('project filters and evidence-backed skill tabs work by keyboard', async ({
   await page.getByRole('button', { name: 'All work', exact: true }).click();
   await expect(page.locator('.selected-project')).toHaveCount(5);
   await page.getByRole('tab', { name: /Cloud/ }).click();
-  await expect(page.getByRole('tabpanel')).toContainText('not large-scale production experience');
+  await expect(page.locator('.skill-panels').getByRole('tabpanel')).toContainText(
+    'not large-scale production experience',
+  );
   await page.getByRole('tab', { name: /MLOps \/ DevOps/ }).click();
-  await expect(page.getByRole('tabpanel')).toContainText('DVC, Kubernetes and KServe');
+  await expect(page.locator('.skill-panels').getByRole('tabpanel')).toContainText(
+    'DVC, Kubernetes and KServe',
+  );
   await page.getByRole('tab', { name: /AI \/ ML/ }).focus();
   await page.keyboard.press('ArrowDown');
   await expect(page.getByRole('tab', { name: /GenAI/ })).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('tabpanel')).toContainText('AI with an application around it.');
+  await expect(page.locator('.skill-panels').getByRole('tabpanel')).toContainText(
+    'AI with an application around it.',
+  );
   await noOverflow(page);
 });
 
@@ -101,13 +108,17 @@ test('ArguLab case study modes, personalization, architecture and navigation', a
   await page.getByRole('button', { name: /Next session/ }).click();
   await expect(page.locator('#loop-detail')).toContainText('Context-aware future practice');
   await page.getByRole('tab', { name: 'AI & audio workflows' }).click();
-  await expect(page.getByRole('tabpanel')).toContainText('whisper-large-v3-turbo');
-  await expect(page.getByRole('tabpanel')).toContainText('openai/gpt-oss-120b');
+  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText(
+    'whisper-large-v3-turbo',
+  );
+  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText(
+    'openai/gpt-oss-120b',
+  );
   await page.getByRole('tab', { name: 'Delivery & quality' }).click();
-  await expect(page.getByRole('tabpanel')).toContainText('47');
-  await expect(page.getByRole('tabpanel')).toContainText('21');
+  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('47');
+  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('21');
   await page.getByRole('tab', { name: 'System architecture' }).click();
-  await expect(page.getByRole('tabpanel')).toContainText('PostgreSQL');
+  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('PostgreSQL');
   await noOverflow(page);
   const audit = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])

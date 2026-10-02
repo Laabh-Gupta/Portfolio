@@ -10,9 +10,9 @@ export default function About() {
             <span>03</span> / THE WAY I WORK
           </p>
           <h2>
-            The model is
+            Good AI needs
             <br />
-            just <span>the beginning.</span>
+            <span>good engineering.</span>
           </h2>
         </div>
         <div className="about-copy">

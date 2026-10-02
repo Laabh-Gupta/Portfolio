@@ -1,5 +1,7 @@
 # Portfolio redesign — 29 September 2026
 
+> Historical design record. The current visual system and verification are documented in [MONOCHROME_REDESIGN.md](./MONOCHROME_REDESIGN.md).
+
 ## Baseline
 
 Clean `main` at `9f4db33`; dedicated branch `codex/portfolio-redesign`. The original commit and branch remain intact. Before changes: production build, prerender and lint pass; Playwright has 25 passing tests and 7 intentional device-specific skips.

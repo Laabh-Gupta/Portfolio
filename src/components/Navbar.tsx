@@ -107,7 +107,6 @@ export default function Navbar() {
               aria-expanded={!collapsed}
               aria-controls="desktop-navigation-links"
               onClick={() => setExpanded((value) => !value)}
-              onFocus={expand}
             >
               <span className="tiny-dot" />
               <span>{activeLabel}</span>

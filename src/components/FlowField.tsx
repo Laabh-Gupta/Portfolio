@@ -1,13 +1,15 @@
 import { useEffect, useRef } from 'react';
 
-/** A finite contact-section flow study, inspired by the supplied 21st.dev canvas. */
+type Particle = { x: number; y: number; vx: number; vy: number; age: number; life: number };
+
+/** The supplied sin/cos vector field, adapted to monochrome and finite, visible bursts. */
 export default function FlowField() {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = ref.current;
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    const context = ctx;
     const media = matchMedia(
       '(min-width: 900px) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
     );
@@ -17,34 +19,57 @@ export default function FlowField() {
       visible = false,
       steps = 0,
       last = 0;
-    let particles: { x: number; y: number }[] = [];
+    let particles: Particle[] = [];
+    let pointer = { x: -1000, y: -1000 };
+    function seed(i: number): Particle {
+      return {
+        x: (i * 137.51) % width,
+        y: (i * 73.73) % height,
+        vx: 0,
+        vy: 0,
+        age: 0,
+        life: 100 + ((i * 37) % 200),
+      };
+    }
+    function step() {
+      context.fillStyle = 'rgba(11,11,11,0.12)';
+      context.fillRect(0, 0, width, height);
+      context.fillStyle = 'rgba(229,229,222,0.58)';
+      particles.forEach((p, i) => {
+        if (++p.age > p.life) Object.assign(p, seed(i + steps));
+        const angle = (Math.cos(p.x * 0.005) + Math.sin(p.y * 0.005)) * Math.PI;
+        p.vx += Math.cos(angle) * 0.2;
+        p.vy += Math.sin(angle) * 0.2;
+        const dx = p.x - pointer.x,
+          dy = p.y - pointer.y,
+          distance = Math.hypot(dx, dy);
+        if (distance > 0 && distance < 150) {
+          const force = ((150 - distance) / 150) * 0.8;
+          p.vx += (dx / distance) * force;
+          p.vy += (dy / distance) * force;
+        }
+        p.vx *= 0.95;
+        p.vy *= 0.95;
+        p.x = (p.x + p.vx + width) % width;
+        p.y = (p.y + p.vy + height) % height;
+        context.fillRect(p.x, p.y, 1.3, 1.3);
+      });
+    }
     function draw(time: number) {
       frame = 0;
-      if (!context || !canvas || !visible || document.hidden || !media.matches || steps >= 120)
-        return;
-      if (time - last >= 33) {
+      if (!visible || document.hidden || !media.matches || steps >= 120) return;
+      if (time - last >= 32) {
         last = time;
         steps++;
-        context.strokeStyle = '#98d6de';
-        context.lineWidth = 0.7;
-        context.globalAlpha = 0.16;
-        particles.forEach((p) => {
-          const angle = (Math.cos(p.x * 0.007) + Math.sin(p.y * 0.008)) * Math.PI;
-          context.beginPath();
-          context.moveTo(p.x, p.y);
-          p.x += Math.cos(angle) * 2;
-          p.y += Math.sin(angle) * 2;
-          context.lineTo(p.x, p.y);
-          context.stroke();
-        });
+        step();
       }
       if (steps < 120) frame = requestAnimationFrame(draw);
-      else canvas.dataset.motion = 'settled';
+      else if (canvas) canvas.dataset.motion = 'settled';
     }
     function configure() {
       cancelAnimationFrame(frame);
       frame = 0;
-      if (!canvas || !context) return;
+      if (!canvas) return;
       if (!media.matches) {
         context.clearRect(0, 0, width, height);
         canvas.dataset.motion = 'static';
@@ -55,19 +80,31 @@ export default function FlowField() {
         frame = requestAnimationFrame(draw);
       } else canvas.dataset.motion = steps >= 120 ? 'settled' : 'paused';
     }
+    function move(event: PointerEvent) {
+      if (!canvas || !media.matches || event.pointerType !== 'mouse') return;
+      const r = canvas.getBoundingClientRect();
+      pointer = { x: event.clientX - r.left, y: event.clientY - r.top };
+      if (steps >= 120 && visible) {
+        steps = 75;
+        configure();
+      }
+    }
+    function leave() {
+      pointer = { x: -1000, y: -1000 };
+    }
     const resize = new ResizeObserver(() => {
-      const box = canvas.getBoundingClientRect();
-      if (Math.abs(width - box.width) < 1 && Math.abs(height - box.height) < 1) return;
-      width = box.width;
-      height = box.height;
+      const r = canvas.getBoundingClientRect();
+      if (Math.abs(width - r.width) < 1 && Math.abs(height - r.height) < 1) return;
+      width = r.width;
+      height = r.height;
+      if (!width || !height) return;
       const dpr = Math.min(devicePixelRatio, 1.5);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      particles = Array.from({ length: 42 }, (_, i) => ({
-        x: (i * 97) % width,
-        y: (i * 61) % height,
-      }));
+      particles = Array.from({ length: Math.min(520, Math.round(width * 0.48)) }, (_, i) =>
+        seed(i),
+      );
       steps = 0;
       configure();
     });
@@ -75,6 +112,9 @@ export default function FlowField() {
       visible = entry.isIntersecting;
       configure();
     });
+    const parent = canvas.parentElement;
+    parent?.addEventListener('pointermove', move, { passive: true });
+    parent?.addEventListener('pointerleave', leave);
     resize.observe(canvas);
     observer.observe(canvas);
     media.addEventListener('change', configure);
@@ -85,6 +125,8 @@ export default function FlowField() {
       observer.disconnect();
       media.removeEventListener('change', configure);
       document.removeEventListener('visibilitychange', configure);
+      parent?.removeEventListener('pointermove', move);
+      parent?.removeEventListener('pointerleave', leave);
     };
   }, []);
   return <canvas className="flow-field" ref={ref} data-motion="static" aria-hidden="true" />;
