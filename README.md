@@ -1,6 +1,6 @@
 # Laabh Gupta — Engineering portfolio
 
-A monochrome React + TypeScript portfolio for AI/ML, software engineering, and MLOps/DevOps. An original silver LG sculpture leads into ArguLab, applied ML projects, and professional experience at EY GDS and HAL.
+A monochrome React + TypeScript portfolio for AI/ML, software engineering, and MLOps/DevOps. A name-led hero and original silver LG sculpture lead into ArguLab, applied ML projects, and professional experience at EY GDS and HAL.
 
 [Portfolio](https://laabh-portfolio.netlify.app/) · [ArguLab](https://argulab.netlify.app/dashboard)
 
@@ -26,7 +26,7 @@ npm test
 
 Build validates TypeScript, bundles the client and server renderer, and prerenders complete HTML. Deploy **`dist` only**. No backend, API keys, or environment variables are required. `dist-ssr` is a build intermediate.
 
-Playwright checks 320, 390, 768, 1024, and 1440px layouts, axe accessibility, keyboard navigation, mobile focus management, overflow, case-study interactions, resume downloads, metadata, direct routes, and motion preferences. Tests also cover the project gallery, product walkthrough, lifecycle map, compact navigation, magnetic actions, 3D loading/failure/context loss, touch-device download exclusion, actual GPU draw calls at rest, spotlight behavior, and the finite contact animation.
+Playwright checks 320, 375, 390, 768, 1024, 1366, 1440, and 1920px layouts, axe accessibility, keyboard navigation, mobile focus management, overflow, case-study interactions, resume downloads, metadata, direct routes, and motion preferences. Tests also cover the project gallery, product walkthrough, skill families, compact navigation, magnetic actions, 3D loading/failure/context loss, touch-device download exclusion, actual GPU draw calls at rest, spotlight behavior, and the shared finite atmosphere, its still reduced-motion presentation, and reuse across routes.
 
 Tests use installed Microsoft Edge by default. For Playwright Chromium, install it with `npx playwright install chromium` and set `PLAYWRIGHT_CHANNEL=chromium`. `PLAYWRIGHT_BASE_URL` can target an existing preview instead of starting one:
 
@@ -43,7 +43,9 @@ Netlify configuration remains: build `npm run build`, publish `dist`, Node 22. I
 
 Home and `/projects/argulab` ship complete HTML, route-specific metadata, and structured data. Legacy page URLs redirect to home sections; the old resume URL remains compatible. Unknown routes use `404.html`. Hosting redirect/status behavior is configured in `public/_redirects` and `vercel.json`; production behavior must be checked after deployment.
 
-Development uses `codex/portfolio-redesign`, with verified pushes and a pull request targeting `main`. A feature-branch push alone does not update `main` or confirm a production deployment. Do not force-push or rewrite the original history.
+The initial redesign was merged through PR #1 from `codex/portfolio-redesign`. The subsequent visual polish is delivered on `main` as requested, with verified ordinary pushes. A feature-branch push alone does not update `main` or confirm a production deployment. Do not force-push or rewrite the original history.
+
+The current art direction, research, atmosphere architecture, and verification are recorded in [Visual polish](docs/VISUAL_POLISH.md). The earlier redesign document remains a historical record.
 
 ## Editing content and visuals
 

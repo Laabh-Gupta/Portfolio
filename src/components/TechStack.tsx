@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowUpRight, BookOpen, Layers3 } from 'lucide-react';
+import { ArrowUpRight, BookOpen } from 'lucide-react';
 import { Tabs } from '@base-ui/react/tabs';
 import { Link } from 'react-router-dom';
 import { skillGroups } from '../data/portfolio';
@@ -15,23 +15,6 @@ export default function TechStack() {
         title="A connected stack. Real evidence."
         description="Explore the tools, and the work behind them."
       />
-      <div className="system-path" role="group" aria-label="Explore the engineering lifecycle">
-        {[
-          ['ai', 'Model', 'Learn & infer'],
-          ['frontend', 'Interface', 'Make it useful'],
-          ['backend', 'API', 'Connect the parts'],
-          ['data', 'Data', 'Persist context'],
-          ['mlops', 'Quality', 'Test & track'],
-          ['cloud', 'Delivery', 'Deploy & observe'],
-        ].map(([id, label, detail], i) => (
-          <button key={id} aria-pressed={category === id} onClick={() => setCategory(id)}>
-            <span className="path-number">0{i + 1}</span>
-            <strong>{label}</strong>
-            <span>{detail}</span>
-            <ArrowUpRight size={15} />
-          </button>
-        ))}
-      </div>
       <Tabs.Root
         value={category}
         onValueChange={setCategory}
@@ -51,9 +34,6 @@ export default function TechStack() {
           {skillGroups.map((group) => (
             <Tabs.Panel key={group.id} value={group.id} className="skill-panel">
               <div className="skill-panel-top">
-                <span className="skill-icon">
-                  <Layers3 size={22} />
-                </span>
                 <span className="micro-label">{group.label}</span>
               </div>
               <h3>{group.headline}</h3>
@@ -91,13 +71,6 @@ export default function TechStack() {
           ))}
         </div>
       </Tabs.Root>
-      <div className="engineering-line">
-        <span>THE FULL PIPELINE</span>
-        <p>
-          Model / AI <b>→</b> Application <b>→</b> APIs <b>→</b> Database <b>→</b> Testing <b>→</b>{' '}
-          Containers <b>→</b> Deployment
-        </p>
-      </div>
     </section>
   );
 }

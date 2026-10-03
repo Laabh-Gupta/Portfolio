@@ -75,7 +75,7 @@ export function mountIdentityScene(
     const studio = new Scene();
     studio.background = new Color('#242424');
     const softboxes = [
-      { x: -3.5, y: 2, z: 5, width: 3, height: 9, light: 5 },
+      { x: -5, y: 2, z: 4, width: 5, height: 9, light: 5 },
       { x: 4, y: 1, z: 3, width: 2, height: 8, light: 3 },
       { x: 0, y: 6, z: 1, width: 8, height: 3, light: 4 },
       { x: 0, y: -4, z: 3, width: 6, height: 1, light: 1.5 },
@@ -97,7 +97,7 @@ export function mountIdentityScene(
       pmrem.dispose();
     }
     model = modelFactory();
-    model.rotation.set(0.18, -0.38, -0.12);
+    model.rotation.set(0.25, -0.5, 0.1);
     scene.add(model, new HemisphereLight('#ffffff', '#222222', 1.4));
     const key = new DirectionalLight('#ffffff', 4);
     key.position.set(-3, 5, 5);
@@ -115,8 +115,8 @@ export function mountIdentityScene(
   let visible = true;
   let disposed = false;
   let frame = 0;
-  let targetX = 0.18;
-  let targetY = -0.38;
+  let targetX = 0.25;
+  let targetY = -0.5;
   let lastFrame = 0;
   function render(now: number) {
     frame = 0;
@@ -152,13 +152,13 @@ export function mountIdentityScene(
   const move = (event: PointerEvent) => {
     if (event.pointerType !== 'mouse') return;
     const rect = host.getBoundingClientRect();
-    targetX = 0.18 + ((event.clientY - rect.top - rect.height / 2) / rect.height) * 0.22;
-    targetY = -0.38 + ((event.clientX - rect.left - rect.width / 2) / rect.width) * 0.5;
+    targetX = 0.25 + ((event.clientY - rect.top - rect.height / 2) / rect.height) * 0.22;
+    targetY = -0.5 + ((event.clientX - rect.left - rect.width / 2) / rect.width) * 0.5;
     invalidate();
   };
   const leave = () => {
-    targetX = 0.18;
-    targetY = -0.38;
+    targetX = 0.25;
+    targetY = -0.5;
     invalidate();
   };
   const visibility = () => {

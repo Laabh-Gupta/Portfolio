@@ -135,17 +135,10 @@ export default function Identity() {
   return (
     <figure className="identity">
       <div className="identity-stage" ref={ref} data-render="static" aria-hidden="true">
-        <div className="identity-halo" />
-
         <IdentityArtwork />
-        <span className="identity-coordinate coordinate-top">OBJECT 001 / LG</span>
-        <span className="identity-coordinate coordinate-side">FORM FOLLOWS FUNCTION</span>
         <span className="identity-shadow" />
         <span className="identity-loading">Preparing interactive view</span>
       </div>
-      <figcaption>
-        <span className="tiny-dot" /> A study in form & function <span>↗</span>
-      </figcaption>
     </figure>
   );
 }

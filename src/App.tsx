@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import PageBehavior from './components/PageBehavior';
 import Home from './pages/Home';
 import MagneticCursor from './components/MagneticCursor';
+import FlowField from './components/FlowField';
 
 const ProjectCaseStudy = lazy(() => import('./pages/ProjectCaseStudy'));
 
@@ -17,6 +18,7 @@ export default function App() {
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <FlowField />
         <Navbar />
         <PageBehavior />
         <MagneticCursor />

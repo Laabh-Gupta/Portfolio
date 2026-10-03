@@ -259,9 +259,17 @@
   color: var(--muted);
   font-size: 11px;
 }
+/* Paper sits below the shared atmospheric layer; content stays above both. */
+.experience-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--paper);
+}
 /* Career evidence on a contrasting paper surface. */
 .experience-section {
-  background: var(--paper);
+  position: relative;
   color: #151515;
   --foreground: #151515;
   --muted: #595952;
@@ -481,14 +489,6 @@
   align-items: center;
   margin-bottom: 26px;
 }
-.skill-icon {
-  display: grid;
-  place-items: center;
-  height: 42px;
-  width: 42px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
 .skill-panel h3 {
   font-size: 33px;
 }
@@ -530,26 +530,6 @@
   margin-top: 26px;
   font-size: 11px;
   color: var(--muted);
-}
-.engineering-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 30px;
-  margin-top: 26px;
-}
-.engineering-line > span {
-  font: 8px var(--font-mono);
-  color: var(--faint);
-}
-.engineering-line p {
-  font: 9px var(--font-mono);
-  color: var(--muted);
-}
-.engineering-line b {
-  padding: 0 10px;
-  font-weight: 400;
-  color: var(--faint);
 }
 .proof-section {
   border-top: 1px solid var(--border);
@@ -746,14 +726,6 @@
 .contact-location > span {
   margin-inline: 8px;
 }
-.flow-field {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.28;
-  pointer-events: none;
-}
 
 /* The career diagrams summarize supplied workflows, without fabricated system metrics. */
 .enterprise-outline {
@@ -795,68 +767,6 @@
   font: 8px/1.6 var(--font-mono);
   margin-top: 7px;
 }
-.system-path {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  margin-bottom: 26px;
-  border-block: 1px solid var(--border);
-}
-.system-path button {
-  position: relative;
-  background: none;
-  border: 0;
-  text-align: left;
-  padding: 24px 20px 24px 0;
-  color: var(--muted);
-  transition: color 0.2s;
-}
-.system-path button:not(:last-child)::after {
-  content: '→';
-  position: absolute;
-  right: 20px;
-  top: 49px;
-  color: var(--faint);
-  font: 15px var(--font-mono);
-}
-.system-path .path-number {
-  display: block;
-  font: 8px var(--font-mono);
-  margin-bottom: 13px;
-}
-.system-path strong {
-  display: block;
-  font-size: 23px;
-  font-weight: 400;
-  letter-spacing: -0.045em;
-  line-height: 1.2;
-}
-.system-path button > span:last-of-type {
-  display: block;
-  font: 8px var(--font-mono);
-  margin-top: 10px;
-}
-.system-path button > svg {
-  position: absolute;
-  right: 20px;
-  top: 22px;
-  opacity: 0;
-}
-.system-path button[aria-pressed='true'],
-.system-path button:hover {
-  color: var(--foreground);
-}
-.system-path button[aria-pressed='true'] > svg {
-  opacity: 1;
-}
-.system-path button[aria-pressed='true']::before {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 20px;
-  height: 2px;
-  background: var(--foreground);
-}
 @media (max-width: 900px) {
   .enterprise-outline {
     padding: 18px 14px;
@@ -871,15 +781,6 @@
   .enterprise-outline > div:not(:last-child)::after {
     right: -13px;
     font-size: 11px;
-  }
-  .system-path {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .system-path button:nth-child(3)::after {
-    display: none;
-  }
-  .system-path button:nth-child(-n + 3) {
-    border-bottom: 1px solid var(--border);
   }
 }
 @media (max-width: 600px) {
@@ -896,23 +797,55 @@
   .enterprise-outline > div:not(:last-child)::after {
     right: -17px;
   }
-  .system-path button {
-    padding: 20px 10px 20px 0;
+}
+
+/* One atmospheric layer, behind content and above each chapter's surface. */
+#root {
+  position: relative;
+  isolation: isolate;
+}
+.flow-field {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: exclusion;
+  opacity: var(--field-opacity, 0.2);
+  mask-image: linear-gradient(90deg, #0003, #000 62%, #0008);
+  transition: opacity 0.8s ease;
+}
+.skill-explorer {
+  background: #111111e8;
+  border-color: var(--border);
+}
+.skill-navigation {
+  padding: 16px;
+}
+.skill-tab {
+  padding-block: 16px;
+}
+.skill-tab[data-active] {
+  background: #ffffff0c;
+  color: var(--foreground);
+  box-shadow: inset 2px 0 0 var(--foreground);
+}
+.skill-tab[data-active] .micro-label {
+  color: var(--muted);
+}
+.skill-panel-top {
+  justify-content: start;
+  margin-bottom: 30px;
+}
+.skill-panel {
+  padding: 42px;
+}
+@media (max-width: 600px) {
+  .flow-field {
+    opacity: calc(var(--field-opacity, 0.2) * 0.6);
   }
-  .system-path strong {
-    font-size: 21px;
-  }
-  .system-path button > span:last-of-type {
-    font-size: 7px;
-  }
-  .system-path button > svg {
-    right: 12px;
-    top: 17px;
-    width: 12px;
-  }
-  .system-path button:not(:last-child)::after {
-    right: 9px;
-    top: 43px;
-    font-size: 12px;
+  .skill-panel {
+    padding: 28px 22px;
   }
 }

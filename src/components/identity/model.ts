@@ -44,9 +44,9 @@ export function createMonogram(): Group {
     envMapIntensity: 1.5,
   });
   const graphite = new MeshPhysicalMaterial({
-    color: '#737373',
-    metalness: 1,
-    roughness: 0.24,
+    color: '#929292',
+    metalness: 0.85,
+    roughness: 0.32,
     clearcoat: 0.25,
     envMapIntensity: 2,
   });

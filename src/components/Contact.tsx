@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { ArrowUpRight, Check, Copy } from 'lucide-react';
 import { personal } from '../data/portfolio';
 import { ExternalLink } from './ui';
-import FlowField from './FlowField';
 
 export default function Contact() {
   const [copyState, setCopyState] = useState('');
@@ -15,9 +14,8 @@ export default function Contact() {
     }
   }
   return (
-    <section id="contact" tabIndex={-1} className="contact-section">
+    <section id="contact" tabIndex={-1} className="contact-section" data-atmosphere="contact">
       <div className="container contact-panel">
-        <FlowField />
         <div className="contact-heading">
           <p className="eyebrow">
             <span>06</span> / START A CONVERSATION

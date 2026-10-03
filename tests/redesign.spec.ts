@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('project walkthrough, gallery and lifecycle map expose the same evidence by keyboard', async ({
+test('project walkthrough, gallery and skill families expose the same evidence by keyboard', async ({
   page,
 }) => {
   await page.goto('/');
@@ -22,8 +22,9 @@ test('project walkthrough, gallery and lifecycle map expose the same evidence by
     'aria-expanded',
     'true',
   );
-  const lifecycle = page.getByRole('group', { name: 'Explore the engineering lifecycle' });
-  await lifecycle.getByRole('button', { name: /API/ }).click();
+  await page.getByRole('tab', { name: /Frontend/ }).focus();
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
   await expect(page.getByRole('tab', { name: /Backend/ })).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('.skill-panel:not([inert])')).toContainText(
     'Reliable boundaries. Useful APIs.',
