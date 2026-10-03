@@ -97,7 +97,7 @@ export function mountIdentityScene(
       pmrem.dispose();
     }
     model = modelFactory();
-    model.rotation.set(0.25, -0.5, 0.1);
+    model.rotation.set(0.32, -0.52, -0.16);
     scene.add(model, new HemisphereLight('#ffffff', '#222222', 1.4));
     const key = new DirectionalLight('#ffffff', 4);
     key.position.set(-3, 5, 5);
@@ -115,8 +115,8 @@ export function mountIdentityScene(
   let visible = true;
   let disposed = false;
   let frame = 0;
-  let targetX = 0.25;
-  let targetY = -0.5;
+  let targetX = 0.32;
+  let targetY = -0.52;
   let lastFrame = 0;
   function render(now: number) {
     frame = 0;
@@ -152,13 +152,13 @@ export function mountIdentityScene(
   const move = (event: PointerEvent) => {
     if (event.pointerType !== 'mouse') return;
     const rect = host.getBoundingClientRect();
-    targetX = 0.25 + ((event.clientY - rect.top - rect.height / 2) / rect.height) * 0.22;
-    targetY = -0.5 + ((event.clientX - rect.left - rect.width / 2) / rect.width) * 0.5;
+    targetX = 0.32 + ((event.clientY - rect.top - rect.height / 2) / rect.height) * 0.22;
+    targetY = -0.52 + ((event.clientX - rect.left - rect.width / 2) / rect.width) * 0.5;
     invalidate();
   };
   const leave = () => {
-    targetX = 0.25;
-    targetY = -0.5;
+    targetX = 0.32;
+    targetY = -0.52;
     invalidate();
   };
   const visibility = () => {

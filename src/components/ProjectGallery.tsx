@@ -1,17 +1,23 @@
-import { useState } from 'react';
+import { useQueryState } from './useQueryState';
 import { ArrowUpRight, Plus, Minus } from 'lucide-react';
 import { personal, selectedProjects } from '../data/portfolio';
 import { ExternalLink, Tags } from './ui';
 import ProjectArtwork from './ProjectArtwork';
 
+const filters = ['All work', 'AI / ML', 'Software'];
+const projectIds = selectedProjects.map((project) =>
+  project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+);
+
 export default function ProjectGallery() {
-  const [filter, setFilter] = useState('All work');
-  const [selected, setSelected] = useState(selectedProjects[0].name);
+  const [filter, setFilter] = useQueryState('filter', filters[0], filters, 'workbench');
+  const [selected, setSelected] = useQueryState('project', projectIds[0], projectIds, 'workbench');
   const projects = selectedProjects.filter((p) => filter === 'All work' || p.category === filter);
-  const active = projects.find((p) => p.name === selected) ?? projects[0];
+  const active =
+    projects.find((p) => projectIds[selectedProjects.indexOf(p)] === selected) ?? projects[0];
   const activeIndex = selectedProjects.indexOf(active);
   return (
-    <div className="workbench">
+    <div className="workbench" id="workbench" tabIndex={-1}>
       <div className="selected-work-heading">
         <div>
           <p className="eyebrow">03 — 07 / THE PROJECT INDEX</p>
@@ -19,7 +25,7 @@ export default function ProjectGallery() {
           <p>Experiments, applications, and the ideas between them.</p>
         </div>
         <div className="filters" role="group" aria-label="Filter selected projects">
-          {['All work', 'AI / ML', 'Software'].map((item) => (
+          {filters.map((item) => (
             <button key={item} aria-pressed={filter === item} onClick={() => setFilter(item)}>
               {item}
             </button>
@@ -43,22 +49,14 @@ export default function ProjectGallery() {
             const index = selectedProjects.indexOf(project);
             const isActive = project === active;
             return (
-              <article
-                className="selected-project"
-                data-active={isActive}
-                key={project.name}
-                onPointerEnter={(e) => {
-                  if (e.pointerType === 'mouse') setSelected(project.name);
-                }}
-              >
+              <article className="selected-project" data-active={isActive} key={project.name}>
                 <div className="gallery-row-head">
                   <span className="project-number">0{index + 3}</span>
                   <h4>
                     <button
                       aria-expanded={isActive}
                       aria-controls={`project-detail-${index}`}
-                      onClick={() => setSelected(project.name)}
-                      onFocus={() => setSelected(project.name)}
+                      onClick={() => setSelected(projectIds[index])}
                     >
                       {project.name}
                       <span aria-hidden="true">

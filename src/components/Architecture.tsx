@@ -11,10 +11,17 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { TabList, Tags } from './ui';
+import { useQueryState } from './useQueryState';
 
 export default function Architecture() {
+  const [view, setView] = useQueryState(
+    'view',
+    'system',
+    ['system', 'ai', 'quality'],
+    'architecture',
+  );
   return (
-    <Tabs.Root defaultValue="system" className="architecture">
+    <Tabs.Root value={view} onValueChange={setView} className="architecture">
       <TabList
         label="ArguLab engineering views"
         items={[

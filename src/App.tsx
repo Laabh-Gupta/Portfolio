@@ -7,8 +7,14 @@ import PageBehavior from './components/PageBehavior';
 import Home from './pages/Home';
 import MagneticCursor from './components/MagneticCursor';
 import FlowField from './components/FlowField';
+import { useScrollRestoration } from './components/useScrollRestoration';
 
 const ProjectCaseStudy = lazy(() => import('./pages/ProjectCaseStudy'));
+
+function RouteScroll() {
+  useScrollRestoration();
+  return null;
+}
 
 export default function App() {
   return (
@@ -51,6 +57,7 @@ export default function App() {
                 }
               />
             </Routes>
+            <RouteScroll />
           </Suspense>
         </main>
         <Footer />

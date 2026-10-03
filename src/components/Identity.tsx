@@ -3,8 +3,10 @@ import type { IdentityScene } from './identity/scene';
 
 function IdentityArtwork() {
   const id = useId().replaceAll(':', '');
-  const shape =
-    'M45 76H104V239Q104 251 116 251H200V307H69Q45 307 45 283Z M412 117C362 46 242 52 204 141C159 245 232 321 323 311C395 306 434 260 434 204V170H313V219H373C352 282 267 276 255 204C241 128 337 98 371 155Z';
+  const shapes = [
+    'M38 78H99V262H224V323H38Z',
+    'M452 130L396 75H262L205 133V267L262 325H398L452 270V182H319V234H390V247L365 272H290L266 248V152L290 128H365L410 171Z',
+  ];
   return (
     <svg
       className="identity-fallback"
@@ -44,23 +46,26 @@ function IdentityArtwork() {
           <stop offset="1" stopColor="#303030" />
         </linearGradient>
       </defs>
-      <g transform="translate(-5 -4) rotate(-10 250 200) skewY(4)">
-        {Array.from({ length: 32 }, (_, i) => (
-          <path
-            key={i}
-            d={shape}
-            transform={`translate(${32 - i} ${(32 - i) * 0.9})`}
-            fill={`url(#${id}edge)`}
-          />
+      <g transform="translate(-6 -5) rotate(-12 250 200) skewY(4)">
+        {shapes.map((shape, index) => (
+          <g key={shape} transform={index === 0 ? 'translate(0 -12)' : ''}>
+            {Array.from({ length: 28 }, (_, i) => (
+              <path
+                key={i}
+                d={shape}
+                transform={`translate(${28 - i} ${(28 - i) * 1.05})`}
+                fill={`url(#${id}edge)`}
+              />
+            ))}
+            <path
+              d={shape}
+              fill={index === 0 ? '#e8e8e3' : `url(#${id}face)`}
+              stroke="#d0d0ca"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+          </g>
         ))}
-        <path
-          d={shape}
-          fill={`url(#${id}face)`}
-          stroke="#d6d6d3"
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-        />
-        <path d={shape} fill="none" stroke="#ffffff" strokeOpacity=".15" strokeWidth="5" />
       </g>
     </svg>
   );

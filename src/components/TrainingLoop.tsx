@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useQueryState } from './useQueryState';
 import {
   ArrowRight,
   BrainCircuit,
@@ -18,8 +18,10 @@ const icons = {
   database: Database,
   repeat: Repeat2,
 };
+const steps = ['session', 'evaluation', 'signals', 'context', 'next'];
 export default function TrainingLoop() {
-  const [step, setStep] = useState(0);
+  const [value, setValue] = useQueryState('step', steps[0], steps, 'personalization');
+  const step = steps.indexOf(value);
   const selected = trainingLoop[step];
   const Icon = icons[selected.icon];
   return (
@@ -41,7 +43,7 @@ export default function TrainingLoop() {
               key={item.title}
               aria-pressed={step === index}
               aria-controls="loop-detail"
-              onClick={() => setStep(index)}
+              onClick={() => setValue(steps[index])}
             >
               <span className="loop-number">0{index + 1}</span>
               <StepIcon size={23} />

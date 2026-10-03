@@ -3,14 +3,14 @@ import { useEffect, useRef } from 'react';
 type Particle = { x: number; y: number; vx: number; vy: number; age: number; life: number };
 type Profile = { opacity: number; density: number; scale: number; x: number; y: number };
 const profiles: Record<string, Profile> = {
-  hero: { opacity: 0.13, density: 0.24, scale: 0.72, x: 160, y: 0 },
-  projects: { opacity: 0.1, density: 0.18, scale: 0.85, x: 0, y: 130 },
-  experience: { opacity: 0.075, density: 0.16, scale: 0.65, x: 100, y: 60 },
-  about: { opacity: 0.1, density: 0.2, scale: 0.8, x: 240, y: 110 },
-  skills: { opacity: 0.11, density: 0.16, scale: 0.9, x: 70, y: 140 },
-  learning: { opacity: 0.09, density: 0.16, scale: 0.75, x: 200, y: 70 },
+  hero: { opacity: 0.2, density: 0.24, scale: 0.72, x: 160, y: 0 },
+  projects: { opacity: 0.17, density: 0.18, scale: 0.85, x: 0, y: 130 },
+  experience: { opacity: 0.19, density: 0.16, scale: 0.65, x: 100, y: 60 },
+  about: { opacity: 0.17, density: 0.2, scale: 0.8, x: 240, y: 110 },
+  skills: { opacity: 0.17, density: 0.16, scale: 0.9, x: 70, y: 140 },
+  learning: { opacity: 0.16, density: 0.16, scale: 0.75, x: 200, y: 70 },
   contact: { opacity: 0.28, density: 0.35, scale: 1, x: 0, y: 0 },
-  case: { opacity: 0.12, density: 0.2, scale: 0.8, x: 130, y: 80 },
+  case: { opacity: 0.18, density: 0.2, scale: 0.8, x: 130, y: 80 },
 };
 
 /** One viewport canvas: the original contact vector field, shared across all chapters. */

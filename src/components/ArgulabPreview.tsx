@@ -1,5 +1,6 @@
-import { AudioLines, Database, ScanLine, ArrowUpRight, Repeat2 } from 'lucide-react';
+import { AudioLines, ArrowUpRight, Database, Repeat2, ScanLine } from 'lucide-react';
 import { Tabs } from '@base-ui/react/tabs';
+import { useQueryState } from './useQueryState';
 
 const steps = [
   {
@@ -7,11 +8,9 @@ const steps = [
     title: 'Practice',
     icon: AudioLines,
     headline: 'Find your voice.',
-    description: 'A structured conversation in one of nine practice modes, through text or voice.',
-    label: '01 / THE CONVERSATION',
+    description: 'Choose one of nine modes and practice through a streaming conversation.',
     output: 'Streaming conversation',
     detail: 'Groq · AI SDK · Voice + text',
-    signals: ['Debate', 'Interview', 'Public speaking', '+ 6 modes'],
   },
   {
     id: 'review',
@@ -19,44 +18,41 @@ const steps = [
     icon: ScanLine,
     headline: 'See what matters.',
     description:
-      'Turn a session into a structured review of arguments, evidence, strengths and weaknesses.',
-    label: '02 / THE EVALUATION',
+      'Turn the conversation into a structured review of arguments, evidence and reasoning.',
     output: 'Structured learning signals',
-    detail: 'Evidence · Weak claims · Counterarguments',
-    signals: ['Strengths', 'Weaknesses', 'Fallacies', 'Next steps'],
+    detail: 'Strengths · Weaknesses · Next steps',
   },
   {
     id: 'remember',
     title: 'Remember',
     icon: Database,
     headline: 'Carry it forward.',
-    description:
-      'Save user-specific context and bring previous learning into the next practice session.',
-    label: '03 / THE PERSONALIZATION',
+    description: 'Persist useful context so the next session can build on previous practice.',
     output: 'A more personal next session',
     detail: 'PostgreSQL · Supabase · Session history',
-    signals: ['Past sessions', 'User context', 'Training signals', 'Next session'],
   },
 ];
 
-export default function ArgulabPreview() {
+export default function ArgulabPreview({ anchor = 'argulab' }: { anchor?: string }) {
+  const [phase, setPhase] = useQueryState(
+    'workflow',
+    'practice',
+    steps.map((step) => step.id),
+    anchor,
+  );
   return (
     <figure className="argulab-preview" aria-label="ArguLab product workflow illustration">
       <figcaption className="preview-toolbar">
-        <span className="argulab-brand">
-          <AudioLines size={23} /> argulab.
+        <span className="argulab-brand" translate="no">
+          <AudioLines size={22} /> argulab.
         </span>
-        <span className="micro-label">INTERACTIVE WORKFLOW / ILLUSTRATED</span>
-        <span className="preview-window-controls" aria-hidden="true">
-          •••
-        </span>
+        <span className="micro-label">WORKFLOW ILLUSTRATION</span>
       </figcaption>
-      <Tabs.Root defaultValue="practice" className="product-explorer">
+      <Tabs.Root value={phase} onValueChange={setPhase} className="product-explorer">
         <Tabs.List className="product-phases" aria-label="Explore the ArguLab workflow">
           {steps.map((step, i) => (
             <Tabs.Tab className="product-phase" value={step.id} key={step.id}>
               <span>0{i + 1}</span>
-              <step.icon size={16} />
               {step.title}
             </Tabs.Tab>
           ))}
@@ -64,41 +60,72 @@ export default function ArgulabPreview() {
         {steps.map((step) => (
           <Tabs.Panel className="product-panel" value={step.id} key={step.id}>
             <div className="product-story">
-              <p className="micro-label">{step.label}</p>
               <p className="product-headline">{step.headline}</p>
               <p>{step.description}</p>
-              <div className="product-signal-tags">
-                {step.signals.map((signal) => (
-                  <span key={signal}>{signal}</span>
-                ))}
-              </div>
             </div>
-            <div className={`product-diagram diagram-${step.id}`} aria-hidden="true">
-              <div className="diagram-orbit orbit-one" />
-              <div className="diagram-orbit orbit-two" />
-              <div className="diagram-core">
-                <step.icon size={48} strokeWidth={0.8} />
-              </div>
-              <span className="diagram-marker marker-one">INPUT</span>
-              <span className="diagram-marker marker-two">CONTEXT</span>
-              <span className="diagram-marker marker-three">OUTPUT</span>
+            <div className="workflow-drawing" aria-hidden="true">
               {step.id === 'practice' && (
-                <div className="diagram-wave">
-                  {Array.from({ length: 29 }, (_, i) => (
-                    <i key={i} style={{ height: 4 + Math.sin(i * 0.63) ** 2 * 29 }} />
+                <>
+                  <div className="conversation-meta">
+                    <span>DEBATE PRACTICE</span>
+                    <AudioLines size={18} />
+                  </div>
+                  <div className="conversation-line">
+                    <span>AI</span>
+                    <p>What is the strongest argument for your position?</p>
+                  </div>
+                  <div className="conversation-line response">
+                    <span>YOU</span>
+                    <div className="response-lines">
+                      <i />
+                      <i />
+                      <i />
+                    </div>
+                  </div>
+                  <div className="conversation-composer">
+                    <span>Think it through. Make your case.</span>
+                    <ArrowUpRight size={17} />
+                  </div>
+                </>
+              )}
+              {step.id === 'review' && (
+                <div className="review-ledger">
+                  {[
+                    ['01', 'The claim', 'What are you arguing?'],
+                    ['02', 'The evidence', 'What supports your position?'],
+                    ['03', 'The counterargument', 'What might change your view?'],
+                  ].map(([n, t, d]) => (
+                    <div key={n}>
+                      <span>{n}</span>
+                      <p>
+                        <strong>{t}</strong>
+                        <small>{d}</small>
+                      </p>
+                      <ScanLine size={18} />
+                    </div>
                   ))}
                 </div>
               )}
-              {step.id === 'review' && (
-                <div className="diagram-review">
-                  <i />
-                  <i />
-                  <i />
-                  <i />
-                </div>
-              )}
               {step.id === 'remember' && (
-                <Repeat2 className="diagram-repeat" size={27} strokeWidth={1} />
+                <div className="context-drawing">
+                  <div>
+                    <span>PREVIOUS SESSIONS</span>
+                    <strong>Experience</strong>
+                    <small>Conversations &amp; reviews</small>
+                  </div>
+                  <span className="context-connector">↓</span>
+                  <div className="context-core">
+                    <Database size={22} />
+                    <p>
+                      <strong>Persistent user context</strong>
+                      <small>Strengths · Areas to improve</small>
+                    </p>
+                  </div>
+                  <span className="context-connector">↓</span>
+                  <p className="next-session">
+                    <Repeat2 size={17} /> Personalized next session
+                  </p>
+                </div>
               )}
             </div>
             <div className="product-output">
@@ -107,15 +134,14 @@ export default function ArgulabPreview() {
                 <strong>{step.output}</strong>
                 <span>{step.detail}</span>
               </div>
-              <ArrowUpRight size={20} />
+              <step.icon size={19} />
             </div>
           </Tabs.Panel>
         ))}
       </Tabs.Root>
       <div className="preview-footer">
-        <span>09 PRACTICE MODES</span>
+        <span>09 MODES</span>
         <span>ONE CONNECTED LEARNING LOOP</span>
-        <Repeat2 size={13} />
       </div>
     </figure>
   );

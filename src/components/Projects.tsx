@@ -13,48 +13,46 @@ export default function Projects() {
         <SectionHeading
           number="01"
           label="SELECTED WORK"
-          title="Built to be used."
+          title="Ideas, made operational."
           description="AI products, applied machine learning, and the systems around them."
         />
-        <span className="section-side-note">FROM EXPERIMENT TO APPLICATION</span>
+        <span className="section-side-note">SELECTED PROJECTS / 2024 — 2026</span>
       </div>
       <Reveal>
         <GlowCard id="argulab" tabIndex={-1} className="featured-project">
           <header className="flagship-heading">
-            <div>
-              <p className="eyebrow">
-                <span className="tiny-dot" /> 01 / FLAGSHIP AI PRODUCT
-              </p>
-              <h3>
-                ArguLab<span className="brand-dot">.</span>
-              </h3>
-            </div>
+            <p className="eyebrow">01 / FLAGSHIP AI PRODUCT</p>
+            <h3 translate="no">
+              ArguLab<span className="brand-dot">.</span>
+            </h3>
+            <p className="flagship-issue">DESIGNED, BUILT &amp; DEPLOYED / 2026</p>
+          </header>
+          <div className="flagship-spread">
             <div className="flagship-intro">
               <p className="project-subtitle">
-                Better conversations.
+                A conversation.
+                <br />A learning signal.
                 <br />
-                <span>Built on what came before.</span>
+                <span>A better next session.</span>
               </p>
               <p className="project-description">
-                Nine AI practice modes. Streaming conversations. A personalization loop that
-                remembers your strengths, weaknesses and previous sessions.
+                A complete AI communication practice platform. Nine modes, streaming conversations
+                and persistent context that makes practice personal.
               </p>
+              <Tags items={argulab.stack} />
+              <div className="project-actions">
+                <Link to="/projects/argulab" className="button button-primary" data-magnetic>
+                  Explore case study <ArrowRight size={17} />
+                </Link>
+                <ExternalLink href={argulab.live} className="text-link">
+                  Open live app
+                </ExternalLink>
+                <ExternalLink href={argulab.github} className="text-link">
+                  GitHub / Product guide
+                </ExternalLink>
+              </div>
             </div>
-          </header>
-          <ArgulabPreview />
-          <div className="flagship-links">
-            <Tags items={argulab.stack} />
-            <div className="project-actions">
-              <Link to="/projects/argulab" className="button button-primary" data-magnetic>
-                Explore case study <ArrowRight size={17} />
-              </Link>
-              <ExternalLink href={argulab.live} className="text-link">
-                Open live app
-              </ExternalLink>
-              <ExternalLink href={argulab.github} className="text-link">
-                GitHub / Product guide
-              </ExternalLink>
-            </div>
+            <ArgulabPreview />
           </div>
           <div className="project-quality">
             <div>

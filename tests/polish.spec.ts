@@ -4,6 +4,7 @@ const sizes = [
   [1366, 768],
   [1440, 900],
   [1920, 1080],
+  [1024, 900],
   [768, 1024],
   [390, 844],
   [375, 812],
@@ -16,6 +17,7 @@ for (const [width, height] of sizes) {
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
     await page.goto('/');
+    await expect(page.getByRole('heading', { name: 'Laabh Gupta.', exact: true })).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     const name = (await page.locator('.hero-name').boundingBox())!;
     const roles = (await page.locator('.hero-roles').boundingBox())!;

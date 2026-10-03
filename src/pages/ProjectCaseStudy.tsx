@@ -21,7 +21,7 @@ export default function ProjectCaseStudy() {
         <ArrowLeft size={16} />
         Back to selected work
       </Link>
-      <header className="case-hero">
+      <header className="case-hero" id="overview" tabIndex={-1}>
         <div>
           <p className="eyebrow">
             <span className="tiny-dot" /> FLAGSHIP CASE STUDY / AI APPLICATION ENGINEERING
@@ -49,8 +49,22 @@ export default function ProjectCaseStudy() {
             </ExternalLink>
           </div>
         </div>
-        <ArgulabPreview />
+        <ArgulabPreview anchor="overview" />
       </header>
+      <nav className="case-chapters" aria-label="Case study chapters">
+        {[
+          ['overview', 'Overview'],
+          ['modes', 'The product'],
+          ['personalization', 'Personalization'],
+          ['architecture', 'Architecture'],
+          ['decisions', 'Decisions'],
+        ].map(([id, label], index) => (
+          <Link key={id} to={`#${id}`}>
+            <span aria-hidden="true">0{index + 1}</span>
+            {label}
+          </Link>
+        ))}
+      </nav>
       <div className="case-summary">
         <div>
           <span>PRODUCT</span>
@@ -89,7 +103,7 @@ export default function ProjectCaseStudy() {
           </p>
         </div>
       </section>
-      <section className="case-section">
+      <section className="case-section" id="modes" tabIndex={-1}>
         <div className="case-section-heading">
           <p className="eyebrow">THE PRODUCT</p>
           <h2>Nine ways to find your voice.</h2>
@@ -124,7 +138,7 @@ export default function ProjectCaseStudy() {
           </span>
         </div>
       </section>
-      <section className="case-section" id="personalization">
+      <section className="case-section" id="personalization" tabIndex={-1}>
         <div className="case-section-heading">
           <p className="eyebrow">THE DIFFERENCE</p>
           <h2>Context that carries forward.</h2>
@@ -132,7 +146,7 @@ export default function ProjectCaseStudy() {
         </div>
         <TrainingLoop />
       </section>
-      <section className="case-section" id="architecture">
+      <section className="case-section" id="architecture" tabIndex={-1}>
         <div className="case-section-heading">
           <p className="eyebrow">UNDER THE HOOD</p>
           <h2>
@@ -144,7 +158,7 @@ export default function ProjectCaseStudy() {
         </div>
         <Architecture />
       </section>
-      <section className="case-section engineering-decisions">
+      <section className="case-section engineering-decisions" id="decisions" tabIndex={-1}>
         <p className="eyebrow">ENGINEERING DECISIONS</p>
         <div className="decision-grid">
           <div>

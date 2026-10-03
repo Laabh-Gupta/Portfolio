@@ -44,30 +44,7 @@ export default function PageBehavior() {
       }
       schema.textContent = JSON.stringify({ '@context': 'https://schema.org', ...page.schema });
     } else schema?.remove();
-    let id = location.hash.slice(1);
-    try {
-      id = decodeURIComponent(id);
-    } catch {
-      /* A malformed external hash must not break navigation. */
-    }
-    let cancelled = false;
-    let frame = 0;
-    // Resolve anchor positions after the self-hosted fonts finish changing the layout.
-    void document.fonts.ready.then(() => {
-      if (cancelled) return;
-      frame = requestAnimationFrame(() => {
-        if (id) {
-          const element = document.getElementById(id);
-          element?.scrollIntoView({ behavior: 'instant' });
-          element?.focus({ preventScroll: true });
-        } else window.scrollTo({ top: 0, behavior: 'instant' });
-      });
-    });
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(frame);
-    };
-  }, [location]);
+  }, [location.pathname]);
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: no-preference) and (pointer: fine)');
     let dispose: (() => void) | undefined;

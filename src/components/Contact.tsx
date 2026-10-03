@@ -16,49 +16,52 @@ export default function Contact() {
   return (
     <section id="contact" tabIndex={-1} className="contact-section" data-atmosphere="contact">
       <div className="container contact-panel">
+        <p className="eyebrow">
+          <span>06</span> / THE NEXT CONVERSATION
+        </p>
         <div className="contact-heading">
-          <p className="eyebrow">
-            <span>06</span> / START A CONVERSATION
-          </p>
           <h2>
-            What are
+            Something worth
             <br />
-            you <span>building?</span>
+            <span>building together.</span>
           </h2>
+          <a
+            href={`mailto:${personal.email}`}
+            className="contact-invite"
+            aria-label="Let’s talk by email"
+            data-magnetic
+          >
+            <ArrowUpRight size={70} strokeWidth={1} />
+          </a>
+        </div>
+        <div className="contact-bottom">
           <p>
-            AI products, data systems, and engineering challenges.
+            AI products. Data systems. Thoughtful engineering.
             <br />
             I’d like to hear what you have in mind.
           </p>
-          <a href={`mailto:${personal.email}`} className="button button-primary" data-magnetic>
-            Let’s talk <ArrowUpRight size={19} />
-          </a>
-        </div>
-        <div className="contact-details">
-          <ArrowUpRight className="contact-arrow" size={100} strokeWidth={0.7} aria-hidden="true" />
-          <span className="micro-label">THE BEST WAY TO REACH ME</span>
-          <div className="email-copy">
-            <a href={`mailto:${personal.email}`}>{personal.email}</a>
-            <button className="icon-button" onClick={copyEmail} aria-label="Copy email address">
-              {copyState === 'Email copied' ? <Check size={18} /> : <Copy size={18} />}
-            </button>
+          <div className="contact-details">
+            <div className="email-copy">
+              <a href={`mailto:${personal.email}`}>{personal.email}</a>
+              <button className="icon-button" onClick={copyEmail} aria-label="Copy email address">
+                {copyState === 'Email copied' ? <Check size={18} /> : <Copy size={18} />}
+              </button>
+            </div>
+            <span role="status" className="copy-status">
+              {copyState}
+            </span>
+            <div className="contact-socials">
+              <ExternalLink href={personal.linkedin} className="text-link">
+                LinkedIn
+              </ExternalLink>
+              <ExternalLink href={personal.github} className="text-link">
+                GitHub
+              </ExternalLink>
+              <a href="tel:+919793084444" className="text-link">
+                {personal.phone}
+              </a>
+            </div>
           </div>
-          <span role="status" className="copy-status">
-            {copyState}
-          </span>
-          <div className="contact-socials">
-            <ExternalLink href={personal.linkedin} className="text-link">
-              LinkedIn
-            </ExternalLink>
-            <ExternalLink href={personal.github} className="text-link">
-              GitHub
-            </ExternalLink>
-          </div>
-          <p className="contact-location">
-            {personal.location}
-            <span> / </span>
-            <a href="tel:+919793084444">{personal.phone}</a>
-          </p>
         </div>
       </div>
     </section>

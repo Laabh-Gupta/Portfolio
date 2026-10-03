@@ -1,6 +1,6 @@
 # Laabh Gupta — Engineering portfolio
 
-A monochrome React + TypeScript portfolio for AI/ML, software engineering, and MLOps/DevOps. A name-led hero and original silver LG sculpture lead into ArguLab, applied ML projects, and professional experience at EY GDS and HAL.
+A monochrome React + TypeScript portfolio for AI/ML, software engineering, and MLOps/DevOps. An editorial hero and original ceramic-and-silver LG sculpture lead into ArguLab, applied ML projects, and professional experience at EY GDS and HAL.
 
 [Portfolio](https://laabh-portfolio.netlify.app/) · [ArguLab](https://argulab.netlify.app/dashboard)
 
@@ -45,7 +45,7 @@ Home and `/projects/argulab` ship complete HTML, route-specific metadata, and st
 
 The initial redesign was merged through PR #1 from `codex/portfolio-redesign`. The subsequent visual polish is delivered on `main` as requested, with verified ordinary pushes. A feature-branch push alone does not update `main` or confirm a production deployment. Do not force-push or rewrite the original history.
 
-The current art direction, research, atmosphere architecture, and verification are recorded in [Visual polish](docs/VISUAL_POLISH.md). The earlier redesign document remains a historical record.
+The current art direction, reference research (including Vercel’s Web Interface Guidelines), interactions, and verification are recorded in [Editorial rebuild](docs/EDITORIAL_REBUILD.md). [Visual polish](docs/VISUAL_POLISH.md) and the earlier redesign documents remain historical records.
 
 ## Editing content and visuals
 
@@ -61,7 +61,7 @@ The current art direction, research, atmosphere architecture, and verification a
 | `src/components/Identity.tsx`       | SVG fallback, loading state, and enhancement lifecycle             |
 | `src/components/identity/model.ts`  | Swappable, original extruded LG model factory                      |
 | `src/components/identity/scene.ts`  | Lazy renderer, studio lighting, interaction, and disposal          |
-| `src/components/ProjectGallery.tsx` | Filtered project index with focus/touch previews                   |
+| `src/components/ProjectGallery.tsx` | Filtered project index with keyboard/touch activation              |
 | `src/components/ProjectArtwork.tsx` | Original SVG concept illustrations                                 |
 | `src/components/ArgulabPreview.tsx` | Practice / review / memory workflow explorer                       |
 | `src/components/FlowField.tsx`      | Finite, pointer-responsive monochrome vector field                 |
@@ -70,11 +70,11 @@ The current art direction, research, atmosphere architecture, and verification a
 | `src/components/IntroLabel.tsx`     | One finite scramble with stable accessible text                    |
 | `src/pages/ProjectCaseStudy.tsx`    | Detailed ArguLab narrative and interactions                        |
 | `scripts/prerender.mjs`             | Build-time HTML and sharing metadata                               |
-| `docs/MONOCHROME_REDESIGN.md`       | Current research, design decisions, and verification               |
+| `docs/EDITORIAL_REBUILD.md`         | Current research, design decisions, and verification               |
 | `docs/REDESIGN.md`                  | Historical September steel-blue redesign record                    |
 | `docs/IMPLEMENTATION.md`            | Earlier implementation record                                      |
 
-Self-hosted Geist and Geist Mono sit on a near-black, charcoal, and off-white system. The paper-colored career chapter provides contrast. Base UI supplies dialog and tab semantics. Focus and touch expose the same project information as pointer hover. Illustrations are labeled and do not represent product screenshots or measured model outputs.
+Self-hosted Geist and Geist Mono sit on a near-black, charcoal, and off-white system. The paper-colored ArguLab feature contrasts with graphite career stories. Base UI supplies dialog and tab semantics. Click, touch, and keyboard activation expose the same project information. Explorer selections have shareable URLs; browser Back restores the previous state and reading position. Illustrations are labeled and do not represent product screenshots or measured model outputs.
 
 No dependencies were added for the monochrome rebuild. React, Three.js, Base UI, Motion, Lenis, and the existing test/build tooling are reused. Motion preferences are honored; Lenis runs only on fine pointers. The native pointer remains everywhere except the opted-in magnetic action itself, and text selection remains native.
 
@@ -82,11 +82,11 @@ No dependencies were added for the monochrome rebuild. React, Three.js, Base UI,
 
 The separate Three.js renderer chunk loads only when the hero is visible on a wide, fine-pointer display without reduced motion. Mobile, touch, and reduced-motion users receive a complete SVG sculpture without downloading the renderer. The same fallback remains visible during loading and after failure.
 
-Custom beveled geometry uses metallic materials, a procedural brushed finish, and four studio softboxes; no external models, portraits, HDRs, or textures are downloaded. Pixel ratio is capped at 1.5. The renderer responds to input/resize and stops at rest, offscreen, or in a hidden document. Cleanup releases GPU resources, observers, listeners, and the context.
+Custom beveled geometry uses ceramic and metallic materials, a procedural brushed finish, and four studio softboxes; no external models, portraits, HDRs, or textures are downloaded. Pixel ratio is capped at 1.5. The renderer responds to input/resize and stops at rest, offscreen, or in a hidden document. Cleanup releases GPU resources, observers, listeners, and the context.
 
 To use a supplied face model later, replace the `createMonogram` factory with a centered Three.js `Group` within the documented 4.5 × 3 unit envelope. Update the matching static fallback. Keep interaction and lifecycle code separate; do not fabricate a person's likeness.
 
-The optional renderer exceeds Vite's 500 kB raw chunk warning threshold. It remains outside the initial bundle and is skipped on touch/reduced-motion devices. Contact particles stop after a finite burst and pause offscreen/hidden; cursor animation settles when the pointer stops. No continuous background render loop is required.
+The optional renderer exceeds Vite's 500 kB raw chunk warning threshold. It remains outside the initial bundle and is skipped on touch/reduced-motion devices. The global background stops after a finite burst and pauses when hidden; cursor animation settles when the pointer stops. No continuous background render loop is required.
 
 ## Resume and sharing card
 

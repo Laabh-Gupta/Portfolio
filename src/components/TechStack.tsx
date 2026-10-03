@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useQueryState } from './useQueryState';
 import { ArrowUpRight, BookOpen } from 'lucide-react';
 import { Tabs } from '@base-ui/react/tabs';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,12 @@ import { skillGroups } from '../data/portfolio';
 import { ExternalLink, SectionHeading, Tags } from './ui';
 
 export default function TechStack() {
-  const [category, setCategory] = useState('ai');
+  const [category, setCategory] = useQueryState(
+    'skill',
+    'ai',
+    skillGroups.map((group) => group.id),
+    'skills',
+  );
   return (
     <section id="skills" tabIndex={-1} className="section container">
       <SectionHeading
@@ -19,7 +24,7 @@ export default function TechStack() {
         value={category}
         onValueChange={setCategory}
         orientation="vertical"
-        className="glass skill-explorer"
+        className="skill-explorer"
       >
         <Tabs.List className="skill-navigation" aria-label="Technical skill categories">
           {skillGroups.map((group, index) => (
