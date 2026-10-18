@@ -10,7 +10,7 @@ export default function Experience() {
       <div className="container career-shell">
         <Reveal className="career-heading">
           <p className="career-eyebrow">
-            <span>02</span> / THE WORK BEHIND THE WORK
+            <span>01</span> / THE WORK BEHIND THE WORK
           </p>
           <div className="career-heading-line">
             <h2>

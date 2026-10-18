@@ -43,6 +43,10 @@ test('compact navigation is usable without a mouse', async ({ page }, info) => {
   await expect(page.locator('.desktop-links')).not.toHaveAttribute('inert', '');
   await page.keyboard.press('Tab');
   await expect(
+    page.locator('.desktop-links').getByRole('link', { name: 'Experience', exact: true }),
+  ).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(
     page.locator('.desktop-links').getByRole('link', { name: 'Projects', exact: true }),
   ).toBeFocused();
   await page.keyboard.press('Enter');

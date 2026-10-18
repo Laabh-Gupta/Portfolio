@@ -45,7 +45,7 @@ test('point sculpture renders immediately and pauses when the hero leaves view',
   ).toBe(0);
   await page.screenshot({ path: info.outputPath('hero-point-sculpture.png') });
   await page
-    .locator('#experience')
+    .locator('#projects')
     .evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
   await expect(hero).toHaveAttribute('data-animate', 'false');
   await expect(points).toHaveCSS('animation-play-state', 'paused');

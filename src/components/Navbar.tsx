@@ -4,7 +4,7 @@ import { ArrowUpRight, Download, Menu, X } from 'lucide-react';
 import { Dialog } from '@base-ui/react/dialog';
 import { personal } from '../data/portfolio';
 
-const links = ['Projects', 'Experience', 'About', 'Skills', 'Contact'];
+const links = ['Experience', 'Projects', 'About', 'Skills', 'Contact'];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);

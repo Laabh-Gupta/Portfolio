@@ -16,7 +16,7 @@ export default function Projects() {
       <div className="work-section-heading">
         <div>
           <p className="work-kicker">
-            <span>01</span> / SELECTED WORK
+            <span>02</span> / SELECTED WORK
           </p>
           <h2>
             Built to be <span>used.</span>
