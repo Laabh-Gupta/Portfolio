@@ -2,11 +2,15 @@
   position: relative;
   width: 100%;
   max-width: 620px;
-  aspect-ratio: 1;
   min-width: 0;
   margin: 0;
   justify-self: center;
   align-self: center;
+}
+.floating-avatar-stage {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
 }
 .floating-avatar-slot:focus {
   outline: none;
@@ -51,23 +55,32 @@
   border-radius: inherit;
 }
 .floating-avatar-slot > figcaption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 4%;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 22px;
+  padding: 0 0 20px;
+  margin-top: -6px;
+}
+.floating-avatar-label {
+  display: inline-flex;
+  align-items: center;
   gap: 9px;
+  white-space: nowrap;
   color: #aab39c;
   font: 8px/1.6 var(--font-mono);
   letter-spacing: 0.12em;
 }
-.floating-avatar-slot > figcaption > span {
+.floating-avatar-label > i {
   width: 4px;
   height: 4px;
   border-radius: 50%;
   background: #c9f85c;
+}
+.avatar-switch {
+  --work-lime: var(--accent);
+  width: auto;
+  flex: none;
 }
 .floating-avatar-traveller {
   --avatar-progress: 0;
@@ -167,9 +180,8 @@
     max-width: 400px;
     margin: 26px auto 28px;
   }
-  .floating-avatar-slot > figcaption {
+  .floating-avatar-label {
     font-size: 7px;
-    bottom: 2%;
   }
 }
 @media (prefers-reduced-motion: reduce) {

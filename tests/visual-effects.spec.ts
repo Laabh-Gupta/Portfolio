@@ -102,6 +102,64 @@ test('scroll shrinks the avatar into its corner and reverses without moving the 
   expect(restored.y).toBeCloseTo(original.y, 0);
 });
 
+test('Switch changes both avatar images, supports keyboard input and preserves its choice while docking', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const { slot, traveller } = await readyAvatar(page);
+  const control = page.getByRole('button', { name: 'Switch', exact: true });
+  const sources = {
+    cartoon: '/images/laabh-avatar.png',
+    portrait: '/images/laabh-avatar-portrait.png',
+  };
+  async function selected(variant: keyof typeof sources) {
+    await expect(control).toHaveAttribute('aria-pressed', String(variant === 'portrait'));
+    for (const layer of [slot, traveller]) {
+      await expect(layer).toHaveAttribute('data-avatar', variant);
+      await expect(layer.locator('img')).toHaveAttribute('src', sources[variant]);
+      await expect
+        .poll(() =>
+          layer
+            .locator('img')
+            .evaluate(
+              (el) =>
+                (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0,
+            ),
+        )
+        .toBe(true);
+    }
+  }
+  await selected('cartoon');
+  await expect(control).toHaveAttribute('data-magnetic');
+  await expect(page.getByRole('link', { name: 'Explore case study' })).toHaveAttribute(
+    'data-magnetic',
+  );
+  await control.hover();
+  const cursor = page.locator('.magnetic-cursor');
+  await expect(cursor).toHaveCSS('opacity', '1');
+  await expect(cursor).toHaveAttribute('data-motion', 'settled');
+  await expect(cursor).toHaveCSS('pointer-events', 'none');
+  await control.click();
+  await selected('portrait');
+  await control.click();
+  await selected('cartoon');
+  await control.focus();
+  await page.keyboard.press('Enter');
+  await selected('portrait');
+  await page
+    .locator('#projects')
+    .evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  await expect(traveller).toHaveAttribute('data-state', 'docked');
+  await selected('portrait');
+  await page.getByRole('button', { name: 'Back to top', exact: true }).click();
+  await expect(traveller).toHaveAttribute('data-state', 'hero');
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(2);
+  await selected('portrait');
+  await control.focus();
+  await page.keyboard.press('Space');
+  await selected('cartoon');
+});
+
 test('direct contact loads dock correctly, Back to top works by keyboard and bare-home navigation resets the avatar', async ({
   page,
 }) => {

@@ -27,9 +27,9 @@ The production build prerenders home, `/projects/argulab` and the 404 page. Play
 ## Content and design
 
 - `src/data/portfolio.ts`: profile, career facts, projects, skills and certifications.
-- `src/components/FloatingAvatar.tsx`: stable hero slot and one travelling visual in a body portal. Measured scroll positions shrink the avatar into a top-right badge; its Back to top button clears stale route fragments and restores heading focus.
+- `src/components/FloatingAvatar.tsx`: stable hero slot and one travelling visual in a body portal. Switch toggles the cartoon and illustrated portrait with the same magnetic button treatment as ArguLab’s case-study action. The selected avatar shrinks into a top-right badge; its Back to top button clears stale route fragments and restores heading focus.
 - `src/avatar.css`: floating animation, hero glow, corner badge and reduced-motion styling. Motion pauses in hidden tabs, and the avatar is hidden/inert while a dialog is open.
-- `public/images/laabh-avatar.png`: transparent personal cartoon illustration generated with the built-in image-generation tool, using selected supplied photos as identity references. The original photographs are untracked.
+- `public/images/laabh-avatar.png` and `laabh-avatar-portrait.png`: transparent cartoon and illustrated portrait generated with the built-in image-generation tool, using selected supplied photos as identity references. The original photographs are untracked.
 - `src/portfolio-refresh.css`: visual tokens, hero, navigation, skills and contact styles.
 - `src/projects-refresh.css`: ArguLab flagship, supporting work and project index.
 - `src/career-refresh.css`: employer details and cream About section.

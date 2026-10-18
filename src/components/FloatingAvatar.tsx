@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeftRight } from 'lucide-react';
 
 type AvatarState = 'hero' | 'travelling' | 'docked';
 type AvatarMotion = 'floating' | 'static' | 'paused';
 type Presentation = { state: AvatarState; motion: AvatarMotion; hidden: boolean };
 
-const asset = '/images/laabh-avatar.png';
+const assets = {
+  cartoon: '/images/laabh-avatar.png',
+  portrait: '/images/laabh-avatar-portrait.png',
+};
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 const interpolate = (from: number, to: number, progress: number) => from + (to - from) * progress;
 
@@ -17,6 +21,8 @@ export default function FloatingAvatar() {
   const traveller = useRef<HTMLDivElement>(null);
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
   const [ready, setReady] = useState(false);
+  const [variant, setVariant] = useState<'cartoon' | 'portrait'>('cartoon');
+  const asset = assets[variant];
   const [presentation, setPresentation] = useState<Presentation>({
     state: 'hero',
     motion: 'static',
@@ -24,6 +30,8 @@ export default function FloatingAvatar() {
   });
 
   useEffect(() => {
+    const portrait = new Image();
+    portrait.src = assets.portrait;
     const frame = requestAnimationFrame(() => setPortalHost(document.body));
     return () => cancelAnimationFrame(frame);
   }, []);
@@ -187,21 +195,48 @@ export default function FloatingAvatar() {
 
   return (
     <>
-      <figure ref={slot} tabIndex={-1} className="floating-avatar-slot" data-avatar-ready={ready}>
-        <div className="floating-avatar-placeholder">
-          <span className="floating-avatar-halo" aria-hidden="true" />
-          <img
-            src={asset}
-            width={1024}
-            height={1024}
-            alt="Illustrated avatar of Laabh Gupta"
-            fetchPriority="high"
-            decoding="async"
-            draggable={false}
-          />
+      <figure
+        ref={slot}
+        tabIndex={-1}
+        className="floating-avatar-slot"
+        data-avatar-ready={ready}
+        data-avatar={variant}
+      >
+        <div className="floating-avatar-stage">
+          <div className="floating-avatar-placeholder">
+            <span className="floating-avatar-halo" aria-hidden="true" />
+            <img
+              src={asset}
+              width={1024}
+              height={1024}
+              alt="Illustrated avatar of Laabh Gupta"
+              fetchPriority="high"
+              decoding="async"
+              draggable={false}
+            />
+          </div>
         </div>
         <figcaption>
-          <span />A LITTLE MORE ME
+          <span className="floating-avatar-label">
+            <i aria-hidden="true" />A LITTLE MORE ME
+          </span>
+          <button
+            type="button"
+            className="work-case-link avatar-switch"
+            data-magnetic
+            aria-pressed={variant === 'portrait'}
+            title={
+              variant === 'cartoon' ? 'Show the illustrated portrait' : 'Show the cartoon avatar'
+            }
+            onClick={() =>
+              setVariant((current) => (current === 'cartoon' ? 'portrait' : 'cartoon'))
+            }
+          >
+            Switch <ArrowLeftRight size={19} aria-hidden="true" />
+          </button>
+          <span className="sr-only" aria-live="polite">
+            {variant === 'portrait' ? 'Illustrated portrait selected.' : 'Cartoon avatar selected.'}
+          </span>
         </figcaption>
       </figure>
       {portalHost &&
@@ -213,6 +248,7 @@ export default function FloatingAvatar() {
             data-motion={presentation.motion}
             data-hidden={presentation.hidden}
             data-ready={ready}
+            data-avatar={variant}
             inert={!interactive}
             aria-hidden={!interactive}
           >
