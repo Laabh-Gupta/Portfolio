@@ -108,17 +108,19 @@ test('ArguLab case study modes, personalization, architecture and navigation', a
   await page.getByRole('button', { name: /Next session/ }).click();
   await expect(page.locator('#loop-detail')).toContainText('Richer context for future practice');
   await page.getByRole('tab', { name: 'AI & audio workflows' }).click();
-  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText(
+  await expect(page.getByRole('tabpanel', { name: 'AI & audio workflows' })).toContainText(
     'whisper-large-v3-turbo',
   );
-  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText(
+  await expect(page.getByRole('tabpanel', { name: 'AI & audio workflows' })).toContainText(
     'openai/gpt-oss-120b',
   );
   await page.getByRole('tab', { name: 'Delivery & quality' }).click();
-  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('58');
-  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('21');
+  await expect(page.getByRole('tabpanel', { name: 'Delivery & quality' })).toContainText('58');
+  await expect(page.getByRole('tabpanel', { name: 'Delivery & quality' })).toContainText('21');
   await page.getByRole('tab', { name: 'System architecture' }).click();
-  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('PostgreSQL');
+  await expect(page.getByRole('tabpanel', { name: 'System architecture' })).toContainText(
+    'PostgreSQL',
+  );
   await noOverflow(page);
   const audit = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
@@ -207,18 +209,16 @@ test('reduced motion disables CSS animation and smooth scroll', async ({ page })
   expect(await page.locator('html').evaluate((el) => getComputedStyle(el).scrollBehavior)).toBe(
     'auto',
   );
-  expect(
-    await page.locator('.orbit-points').evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe('none');
+  const portrait = page.locator('.face-portrait');
+  await expect(portrait).toHaveAttribute('data-motion', 'static');
+  await expect(portrait).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('html')).not.toHaveClass(/lenis/);
-  await expect(page.locator('.intro-orbit')).toBeVisible();
-  await expect(page.locator('.intro-sculpture canvas')).toHaveCount(0);
-  expect(
-    await page
-      .locator('.intro-code-rain span')
-      .first()
-      .evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe('none');
+  await expect(portrait.locator('.portrait-canvas')).toBeVisible();
+  const portraitPixels = () =>
+    portrait.locator('canvas').evaluate((el) => (el as HTMLCanvasElement).toDataURL());
+  const still = await portraitPixels();
+  await page.waitForTimeout(200);
+  expect(await portraitPixels()).toBe(still);
   expect(
     await page.evaluate(() =>
       performance.getEntriesByType('resource').some((r) => r.name.includes('/assets/scene-')),

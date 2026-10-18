@@ -1,6 +1,6 @@
 """Render the graphite/lime portfolio sharing composition; requires Pillow."""
 from pathlib import Path
-from math import sin, cos, pi
+import ast
 from PIL import Image, ImageDraw, ImageFont
 
 root = Path(__file__).resolve().parent.parent
@@ -21,18 +21,14 @@ line((56, 104, 1144, 104))
 text(49, 129, 'Laabh', 111, bold=True)
 text(49, 245, 'Gupta.', 111, bold=True)
 text(59, 397, 'Making intelligence work in the real world.', 21, '#c9f85c')
-points = []
-for i in range(64 * 25):
-    u, v = (i % 64) / 64 * 2 * pi, (i // 64) / 25 * 2 * pi
-    r = 132 + 53 * cos(v)
-    x, y, z = r * cos(u), r * sin(u), 53 * sin(v)
-    yy, zz = y * cos(.92) - z * sin(.92), y * sin(.92) + z * cos(.92)
-    points.append((zz, 900 + x * cos(-.58) - yy * sin(-.58), 309 + x * sin(-.58) + yy * cos(-.58)))
-for depth, x, y in sorted(points):
-    alpha = .2 + ((depth + 190) / 380) * .8
+geometry = (root / 'src' / 'data' / 'portrait.ts').read_text(encoding='utf-8')
+points_text = geometry.split('export const portraitPoints:', 1)[1].split('= ', 1)[1].split(';', 1)[0]
+for x, y, depth, intensity in sorted(ast.literal_eval(points_text), key=lambda p: p[2]):
+    alpha = .22 + intensity * .75
     color = tuple(round(a * alpha + b * (1-alpha)) for a,b in zip((201,248,92),(16,17,14)))
-    rad = 1.6 * scale
-    draw.ellipse((x*scale-rad,y*scale-rad,x*scale+rad,y*scale+rad), fill=color)
+    rad = (.55 + intensity * .7) * scale
+    px, py = (650 + x * .9) * scale, (75 + y * .9) * scale
+    draw.ellipse((px-rad,py-rad,px+rad,py+rad), fill=color)
 line((56, 514, 1144, 514))
 text(56, 547, 'AI/ML  /  SOFTWARE ENGINEERING  /  MLOPS', 15, '#aab49c')
 text(891, 547, 'AI & Data Engineer @ EY', 15, '#aab49c')

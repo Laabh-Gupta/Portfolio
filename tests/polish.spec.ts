@@ -22,8 +22,13 @@ for (const [width, height] of sizes) {
     const name = (await page.locator('.intro h1').boundingBox())!;
     const statement = (await page.locator('.intro-statement').boundingBox())!;
     expect(name.y + name.height).toBeLessThan(statement.y);
-    await expect(page.locator('.intro-orbit')).toBeVisible();
-    await expect(page.locator('.orbit-points circle')).toHaveCount(1600);
+    const portrait = page.getByRole('figure', {
+      name: 'Interactive particle portrait of Laabh Gupta',
+    });
+    await expect(portrait).toBeVisible();
+    await expect(portrait).toHaveAttribute('data-ready', 'true');
+    await expect(portrait).toHaveAttribute('data-motion', 'static');
+    expect(await portrait.locator('.portrait-fallback circle').count()).toBeGreaterThan(500);
     await page.screenshot({ path: info.outputPath(`hero-${width}.png`) });
     for (const id of ['projects', 'experience', 'about', 'skills', 'contact']) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();
