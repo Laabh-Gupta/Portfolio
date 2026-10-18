@@ -106,7 +106,7 @@ test('ArguLab case study modes, personalization, architecture and navigation', a
   await page.getByRole('button', { name: /User context/ }).click();
   await expect(page.locator('#loop-detail')).toContainText('Persist user context');
   await page.getByRole('button', { name: /Next session/ }).click();
-  await expect(page.locator('#loop-detail')).toContainText('Context-aware future practice');
+  await expect(page.locator('#loop-detail')).toContainText('Richer context for future practice');
   await page.getByRole('tab', { name: 'AI & audio workflows' }).click();
   await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText(
     'whisper-large-v3-turbo',
@@ -115,7 +115,7 @@ test('ArguLab case study modes, personalization, architecture and navigation', a
     'openai/gpt-oss-120b',
   );
   await page.getByRole('tab', { name: 'Delivery & quality' }).click();
-  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('47');
+  await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('58');
   await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('21');
   await page.getByRole('tab', { name: 'System architecture' }).click();
   await expect(page.locator('.architecture').getByRole('tabpanel')).toContainText('PostgreSQL');
@@ -208,11 +208,17 @@ test('reduced motion disables CSS animation and smooth scroll', async ({ page })
     'auto',
   );
   expect(
-    await page.locator('.identity-fallback').evaluate((el) => getComputedStyle(el).animationName),
+    await page.locator('.orbit-points').evaluate((el) => getComputedStyle(el).animationName),
   ).toBe('none');
   await expect(page.locator('html')).not.toHaveClass(/lenis/);
-  await expect(page.locator('.identity-stage')).toHaveAttribute('data-render', 'static');
-  await expect(page.locator('.identity-stage canvas')).toHaveCount(0);
+  await expect(page.locator('.intro-orbit')).toBeVisible();
+  await expect(page.locator('.intro-sculpture canvas')).toHaveCount(0);
+  expect(
+    await page
+      .locator('.intro-code-rain span')
+      .first()
+      .evaluate((el) => getComputedStyle(el).animationName),
+  ).toBe('none');
   expect(
     await page.evaluate(() =>
       performance.getEntriesByType('resource').some((r) => r.name.includes('/assets/scene-')),

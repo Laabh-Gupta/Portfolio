@@ -19,9 +19,11 @@ for (const [width, height] of sizes) {
     await page.goto('/');
     await expect(page.getByRole('heading', { name: 'Laabh Gupta.', exact: true })).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
-    const name = (await page.locator('.hero-name').boundingBox())!;
-    const roles = (await page.locator('.hero-roles').boundingBox())!;
-    expect(name.y + name.height).toBeLessThan(roles.y);
+    const name = (await page.locator('.intro h1').boundingBox())!;
+    const statement = (await page.locator('.intro-statement').boundingBox())!;
+    expect(name.y + name.height).toBeLessThan(statement.y);
+    await expect(page.locator('.intro-orbit')).toBeVisible();
+    await expect(page.locator('.orbit-points circle')).toHaveCount(1600);
     await page.screenshot({ path: info.outputPath(`hero-${width}.png`) });
     for (const id of ['projects', 'experience', 'about', 'skills', 'contact']) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();
@@ -34,6 +36,10 @@ for (const [width, height] of sizes) {
         await page.screenshot({ path: info.outputPath(`${id}-${width}.png`) });
       }
     }
+    await expect(page.locator('.work-flagship')).toContainText('Nine AI modes');
+    await expect(page.locator('.work-feature-rail > div')).toHaveCount(3);
+    await expect(page.locator('.career-employer')).toHaveCount(2);
+    await expect(page.locator('.bio-education')).toContainText('VIT Chennai');
     await page.goto('/projects/argulab');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('ArguLab.');
     expect(

@@ -77,7 +77,7 @@ export const trainingLoop = [
     title: 'Extract learning signals',
     short: 'Learning signals',
     detail:
-      'Previous sessions are summarized and strengths and weaknesses are extracted into useful training context.',
+      'The richer context architecture extracts session summaries, strengths, weaknesses and skill scores from completed practice.',
     output: 'Strengths + areas to improve',
     icon: 'scan',
   },
@@ -85,7 +85,7 @@ export const trainingLoop = [
     title: 'Persist user context',
     short: 'User context',
     detail:
-      'User-specific training context is saved alongside session history, so it can be used beyond a single conversation.',
+      'The architecture stores these learning signals as user-specific context alongside session history, ready to support future practice.',
     output: 'Persistent, user-specific context',
     icon: 'database',
   },
@@ -93,8 +93,8 @@ export const trainingLoop = [
     title: 'Personalize the next session',
     short: 'Next session',
     detail:
-      'Future session requests carry the saved context, allowing the AI to tailor practice to previous performance.',
-    output: 'Context-aware future practice',
+      'The richer context rollout is designed to carry saved learning signals into future AI requests, extending the current performance-based difficulty selection.',
+    output: 'Richer context for future practice',
     icon: 'repeat',
   },
 ] as const;
@@ -245,7 +245,7 @@ export const skillGroups: SkillGroup[] = [
     label: 'GenAI / LLM',
     headline: 'AI with an application around it.',
     description:
-      'Structured conversations, evaluation and persistent context; connecting model capabilities to a product workflow.',
+      'Structured conversations, evaluation and saved progress; connecting model capabilities to a product workflow.',
     skills: [
       'LLM Applications',
       'Groq',
@@ -258,7 +258,7 @@ export const skillGroups: SkillGroup[] = [
     evidence: [
       {
         name: 'ArguLab',
-        text: 'Streaming conversations, structured reviews and personalized future sessions.',
+        text: 'Streaming conversations, structured reviews and saved-performance adaptive difficulty.',
         href: '/projects/argulab',
       },
       {
@@ -342,7 +342,7 @@ export const skillGroups: SkillGroup[] = [
     evidence: [
       {
         name: 'ArguLab',
-        text: 'PostgreSQL on Supabase for user context and account session history.',
+        text: 'PostgreSQL on Supabase for account session history and saved performance.',
         href: '/projects/argulab',
       },
       {

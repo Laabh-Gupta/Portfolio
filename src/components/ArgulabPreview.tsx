@@ -27,9 +27,10 @@ const steps = [
     title: 'Remember',
     icon: Database,
     headline: 'Carry it forward.',
-    description: 'Persist useful context so the next session can build on previous practice.',
-    output: 'A more personal next session',
-    detail: 'PostgreSQL · Supabase · Session history',
+    description:
+      'Keep session history and use saved performance to adapt the next session’s difficulty.',
+    output: 'Adaptive difficulty',
+    detail: 'Saved progress · PostgreSQL · Supabase',
   },
 ];
 
@@ -110,20 +111,20 @@ export default function ArgulabPreview({ anchor = 'argulab' }: { anchor?: string
                 <div className="context-drawing">
                   <div>
                     <span>PREVIOUS SESSIONS</span>
-                    <strong>Experience</strong>
-                    <small>Conversations &amp; reviews</small>
+                    <strong>Performance</strong>
+                    <small>Saved reviews &amp; scores</small>
                   </div>
                   <span className="context-connector">↓</span>
                   <div className="context-core">
                     <Database size={22} />
                     <p>
-                      <strong>Persistent user context</strong>
-                      <small>Strengths · Areas to improve</small>
+                      <strong>Saved performance</strong>
+                      <small>Difficulty selection</small>
                     </p>
                   </div>
                   <span className="context-connector">↓</span>
                   <p className="next-session">
-                    <Repeat2 size={17} /> Personalized next session
+                    <Repeat2 size={17} /> Next session, adjusted difficulty
                   </p>
                 </div>
               )}
@@ -141,7 +142,7 @@ export default function ArgulabPreview({ anchor = 'argulab' }: { anchor?: string
       </Tabs.Root>
       <div className="preview-footer">
         <span>09 MODES</span>
-        <span>ONE CONNECTED LEARNING LOOP</span>
+        <span>ONE CONNECTED PRACTICE WORKFLOW</span>
       </div>
     </figure>
   );

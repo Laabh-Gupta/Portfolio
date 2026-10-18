@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 test.use({ reducedMotion: 'no-preference' });
 
-test('3D loading preserves identity, then settles without idle GPU work', async ({
+test('point sculpture renders immediately and pauses when the hero leaves view', async ({
   page,
 }, info) => {
   const errors: string[] = [];
@@ -11,61 +11,51 @@ test('3D loading preserves identity, then settles without idle GPU work', async 
   page.on('console', (message) => {
     if (message.type() === 'error') errors.push(message.text());
   });
-  let release: () => void = () => {};
-  const gate = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  await page.route('**/assets/scene-*.js', async (route) => {
-    await gate;
-    await route.continue();
-  });
   await page.addInitScript(() => {
-    const metrics = { draws: 0 };
-    Object.assign(window, { portfolioGpuMetrics: metrics });
-    const arrays = WebGL2RenderingContext.prototype.drawArrays;
-    WebGL2RenderingContext.prototype.drawArrays = function (...args) {
-      metrics.draws++;
-      return arrays.apply(this, args);
-    };
-    const original = WebGL2RenderingContext.prototype.drawElements;
-    WebGL2RenderingContext.prototype.drawElements = function (...args) {
-      metrics.draws++;
-      return original.apply(this, args);
-    };
+    const original = HTMLCanvasElement.prototype.getContext;
+    Object.assign(window, { portfolioWebGLRequests: 0 });
+    HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      kind: string,
+      ...args: unknown[]
+    ) {
+      if (kind.startsWith('webgl')) {
+        const metrics = window as unknown as { portfolioWebGLRequests: number };
+        metrics.portfolioWebGLRequests++;
+      }
+      return Reflect.apply(original, this, [kind, ...args]);
+    } as typeof original;
   });
   await page.goto('/');
-  const stage = page.locator('.identity-stage');
-  await expect(stage).toHaveAttribute('data-render', 'loading');
-  await expect(page.getByTestId('identity-fallback')).toHaveCSS('opacity', '1');
+  const hero = page.locator('.intro');
+  const points = page.locator('.orbit-points');
+  const rain = page.locator('.intro-code-rain');
+  await expect(hero).toHaveAttribute('data-animate', 'true');
+  await expect(hero.locator('.intro-orbit')).toBeVisible();
+  await expect(points.locator('circle')).toHaveCount(1600);
+  await expect(hero.locator('.intro-sculpture')).toHaveAttribute('aria-hidden', 'true');
+  await expect(rain.locator('span')).toHaveCount(13);
+  await expect(points).toHaveCSS('animation-play-state', 'running');
+  await expect(rain.locator('span').first()).toHaveCSS('animation-play-state', 'running');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Laabh Gupta.');
-  release();
-  await expect(stage).toHaveAttribute('data-render', 'webgl');
-  await expect(stage.locator('canvas')).toBeVisible();
-  const draws = () =>
-    page.evaluate(
-      () =>
-        (window as unknown as { portfolioGpuMetrics: { draws: number } }).portfolioGpuMetrics.draws,
-    );
-  await expect.poll(draws).toBeGreaterThan(0);
-  await page.waitForTimeout(300);
-  const settled = await draws();
-  await page.waitForTimeout(450);
-  expect(await draws()).toBe(settled);
-  const box = (await stage.boundingBox())!;
-  await page.mouse.move(box.x + box.width * 0.8, box.y + box.height * 0.4);
-  await expect.poll(draws).toBeGreaterThan(settled);
-  await page.mouse.move(15, 15);
-  await page.waitForTimeout(1000);
-  const resting = await draws();
-  await page.waitForTimeout(450);
-  expect(await draws()).toBe(resting);
-  await page.screenshot({ path: info.outputPath('hero-webgl.png') });
+  expect(
+    await page.evaluate(
+      () => (window as unknown as { portfolioWebGLRequests: number }).portfolioWebGLRequests,
+    ),
+  ).toBe(0);
+  await page.screenshot({ path: info.outputPath('hero-point-sculpture.png') });
+  await page
+    .locator('#experience')
+    .evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  await expect(hero).toHaveAttribute('data-animate', 'false');
+  await expect(points).toHaveCSS('animation-play-state', 'paused');
+  await expect(rain.locator('span').first()).toHaveCSS('animation-play-state', 'paused');
+  await hero.evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  await expect(hero).toHaveAttribute('data-animate', 'true');
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect(stage).toHaveAttribute('data-render', 'static');
-  await expect(stage.locator('canvas')).toHaveCount(0);
-  await expect(page.getByTestId('identity-fallback')).toHaveCSS('opacity', '1');
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await expect(stage).toHaveAttribute('data-render', 'webgl');
+  await expect(points).toHaveCSS('animation-name', 'none');
+  await expect(rain.locator('span').first()).toHaveCSS('animation-name', 'none');
+  await expect(hero.locator('.intro-orbit')).toBeVisible();
   await page.getByRole('link', { name: 'Explore case study' }).click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('ArguLab.');
   expect(errors).toEqual([]);
@@ -86,24 +76,36 @@ test('unavailable WebGL leaves a complete working portfolio', async ({ page }) =
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/');
-  await expect(page.locator('.identity-stage')).toHaveAttribute('data-render', 'fallback');
-  await expect(page.getByTestId('identity-fallback')).toHaveCSS('opacity', '1');
-  await expect(page.locator('.identity-stage canvas')).toHaveCount(0);
+  await expect(page.locator('.intro-orbit')).toBeVisible();
+  await expect(page.locator('.orbit-points circle')).toHaveCount(1600);
+  await expect(page.locator('.intro canvas')).toHaveCount(0);
   await page.getByRole('link', { name: 'Explore case study' }).click();
   await expect(page).toHaveURL(/projects\/argulab$/);
   expect(errors).toEqual([]);
 });
 
-test('WebGL context loss returns to static artwork', async ({ page }) => {
+test('hero motion pauses while the document is hidden and resumes when visible', async ({
+  page,
+}) => {
   await page.goto('/');
-  await expect(page.locator('.identity-stage')).toHaveAttribute('data-render', 'webgl');
-  await page.locator('.identity-stage canvas').evaluate((canvas) => {
-    const gl = (canvas as HTMLCanvasElement).getContext('webgl2');
-    gl?.getExtension('WEBGL_lose_context')?.loseContext();
+  const hero = page.locator('.intro');
+  const points = hero.locator('.orbit-points');
+  const rain = hero.locator('.intro-code-rain span').first();
+  await expect(hero).toHaveAttribute('data-animate', 'true');
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
+    document.dispatchEvent(new Event('visibilitychange'));
   });
-  await expect(page.locator('.identity-stage')).toHaveAttribute('data-render', 'fallback');
-  await expect(page.locator('.identity-stage canvas')).toHaveCount(0);
-  await expect(page.getByTestId('identity-fallback')).toHaveCSS('opacity', '1');
+  await expect(hero).toHaveAttribute('data-animate', 'false');
+  await expect(points).toHaveCSS('animation-play-state', 'paused');
+  await expect(rain).toHaveCSS('animation-play-state', 'paused');
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => false });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(hero).toHaveAttribute('data-animate', 'true');
+  await expect(points).toHaveCSS('animation-play-state', 'running');
+  await expect(rain).toHaveCSS('animation-play-state', 'running');
 });
 
 test('touch displays never download the optional renderer', async ({ browser }) => {
@@ -116,12 +118,17 @@ test('touch displays never download the optional renderer', async ({ browser }) 
   const page = await context.newPage();
   await page.goto(test.info().project.use.baseURL + '/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Laabh Gupta.');
-  await expect(page.locator('.identity-stage')).toHaveAttribute('data-render', 'static');
+  await expect(page.locator('.intro-orbit')).toBeVisible();
+  await expect(page.locator('.orbit-points circle')).toHaveCount(1600);
+  await expect(page.locator('.intro canvas')).toHaveCount(0);
   expect(
     await page.evaluate(() =>
       performance.getEntriesByType('resource').some((r) => /scene-.*\.js/.test(r.name)),
     ),
   ).toBe(false);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.locator('.intro-code-rain')).toHaveCSS('display', 'none');
+  await expect(page.locator('.intro-orbit')).toBeVisible();
   await context.close();
 });
 

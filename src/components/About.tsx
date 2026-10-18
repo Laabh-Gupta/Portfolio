@@ -3,54 +3,65 @@ import { Reveal } from './ui';
 
 export default function About() {
   return (
-    <section id="about" tabIndex={-1} className="section container about-section">
-      <Reveal className="about-layout">
-        <p className="eyebrow">
-          <span>03</span> / PERSPECTIVE
-        </p>
-        <div className="about-statement">
-          <h2>
-            The model is
-            <br />
-            only the beginning.
-          </h2>
-          <div className="about-copy">
-            <p>
-              I’m Laabh, an AI &amp; Data Engineer interested in everything that makes intelligence
-              useful.
+    <section id="about" tabIndex={-1} className="bio-section">
+      <div className="container bio-shell">
+        <Reveal className="bio-layout">
+          <div className="bio-sidebar">
+            <p className="bio-eyebrow">
+              <span>03</span> / A LITTLE ABOUT ME
             </p>
-            <p>
-              At EY, I work across enterprise data and experiment visibility. In ArguLab, I connect
-              streaming AI to authenticated APIs, persistent context and a product people can
-              practice with.
+            <div className="bio-monogram" aria-hidden="true">
+              <span>l</span>
+              <span>g.</span>
+              <i />
+            </div>
+            <p className="bio-location">
+              <span /> Kanpur, India
             </p>
-            <p>
-              My work spans the whole path: the data going in, the model’s output, the interface
-              around it, and the infrastructure that keeps it running.
-            </p>
-            <a href="#skills" className="text-link">
-              Explore the engineering toolkit <ArrowUpRight size={17} />
-            </a>
           </div>
-        </div>
-      </Reveal>
-      <ol className="engineering-path" aria-label="My engineering approach">
-        <li>
-          <span>01</span>
-          <strong>Understand</strong>
-          <p>Data, context, the actual problem.</p>
-        </li>
-        <li>
-          <span>02</span>
-          <strong>Connect</strong>
-          <p>Models, APIs, interfaces, persistence.</p>
-        </li>
-        <li>
-          <span>03</span>
-          <strong>Deliver</strong>
-          <p>Evaluation, testing, deployment.</p>
-        </li>
-      </ol>
+          <div className="bio-main">
+            <h2>
+              A systems mind.
+              <br />
+              <span>A maker’s instinct.</span>
+            </h2>
+            <div className="bio-copy">
+              <p className="bio-intro">
+                I’m Laabh. I build at the intersection of AI, product and infrastructure.
+              </p>
+              <p>
+                I like the part where an interesting model becomes something useful: the data
+                flowing in, the API connecting it, the interface someone actually uses.
+              </p>
+              <p>
+                That curiosity takes me from enterprise AI and data engineering at EY to building
+                ArguLab, a place to practice better conversations with AI. I care about how the
+                whole system comes together.
+              </p>
+              <a href="#skills" className="bio-link">
+                Explore my toolkit <ArrowUpRight size={19} strokeWidth={1.5} aria-hidden="true" />
+              </a>
+            </div>
+            <div className="bio-education">
+              <p className="bio-small-label">THE FOUNDATION</p>
+              <div>
+                <h3>VIT Chennai</h3>
+                <p>
+                  B.Tech · Computer Science &amp; Engineering
+                  <br />
+                  <span>Specialization in Artificial Intelligence &amp; Machine Learning</span>
+                </p>
+              </div>
+              <div className="bio-education-meta">
+                <span>2022 — 2026</span>
+                <strong>
+                  8.1 <span>CGPA</span>
+                </strong>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
     </section>
   );
 }

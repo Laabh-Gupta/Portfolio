@@ -20,7 +20,7 @@ export default function ProjectGallery() {
     <div className="workbench" id="workbench" tabIndex={-1}>
       <div className="selected-work-heading">
         <div>
-          <p className="eyebrow">03 — 07 / THE PROJECT INDEX</p>
+          <p className="eyebrow">04 — 08 / THE PROJECT INDEX</p>
           <h3>From the workbench.</h3>
           <p>Experiments, applications, and the ideas between them.</p>
         </div>
@@ -35,7 +35,7 @@ export default function ProjectGallery() {
       <div className="gallery-layout">
         <figure className="gallery-stage" aria-label={`${active.name} concept illustration`}>
           <div className="gallery-stage-head">
-            <span>SELECTED / 0{activeIndex + 3}</span>
+            <span>SELECTED / 0{activeIndex + 4}</span>
             <ArrowUpRight size={18} />
           </div>
           <ProjectArtwork index={activeIndex} />
@@ -51,7 +51,7 @@ export default function ProjectGallery() {
             return (
               <article className="selected-project" data-active={isActive} key={project.name}>
                 <div className="gallery-row-head">
-                  <span className="project-number">0{index + 3}</span>
+                  <span className="project-number">0{index + 4}</span>
                   <h4>
                     <button
                       aria-expanded={isActive}

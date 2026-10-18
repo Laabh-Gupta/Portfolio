@@ -6,6 +6,9 @@ import '@fontsource-variable/geist-mono';
 import 'lenis/dist/lenis.css';
 import './styles.css';
 import './responsive.css';
+import './portfolio-refresh.css';
+import './projects-refresh.css';
+import './career-refresh.css';
 import App from './App';
 
 const root = document.getElementById('root')!;

@@ -1,91 +1,137 @@
-import { ArrowDownRight } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Plus } from 'lucide-react';
 import { experience } from '../data/portfolio';
-import { Reveal, SectionHeading } from './ui';
+import { Reveal } from './ui';
 
 export default function Experience() {
   const [current, internship, hal] = experience;
+
   return (
-    <section id="experience" tabIndex={-1} className="section experience-section">
-      <div className="container">
-        <SectionHeading number="02" label="IN PRACTICE" title="Engineering, in the real world." />
+    <section id="experience" tabIndex={-1} className="career-section">
+      <div className="container career-shell">
+        <Reveal className="career-heading">
+          <p className="career-eyebrow">
+            <span>02</span> / THE WORK BEHIND THE WORK
+          </p>
+          <div className="career-heading-line">
+            <h2>
+              Good work.
+              <br />
+              <span>Real-world impact.</span>
+            </h2>
+            <p>
+              From enterprise data platforms to aerospace software. Learning by building things that
+              have a job to do.
+            </p>
+          </div>
+        </Reveal>
+
         <Reveal>
-          <article className="ey-experience">
-            <div className="career-identity">
-              <p className="micro-label">2026 — PRESENT</p>
-              <p className="employer-wordmark" translate="no">
+          <article className="career-employer career-ey">
+            <div className="career-company">
+              <p className="career-year">2026 — PRESENT</p>
+              <div className="career-wordmark" translate="no">
                 EY<span>GDS</span>
-              </p>
-              <p className="employer-full">
+              </div>
+              <h3>
                 Ernst &amp; Young
                 <br />
                 Global Delivery Services
-              </p>
-              <div className="career-progression">
-                <div>
-                  <h3>{internship.role}</h3>
-                  <p>January — May 2026</p>
-                </div>
-                <ArrowDownRight size={22} aria-hidden="true" />
-                <div className="current-role">
-                  <h3>{current.role}</h3>
-                  <p>June 2026 — Present</p>
-                  <span>Converted to full-time</span>
-                </div>
-              </div>
+              </h3>
+              <span className="career-current">
+                <span /> CURRENTLY HERE
+              </span>
             </div>
-            <div className="career-work">
-              <p className="experience-intro">
-                Enterprise AI needs more than a model. It needs dependable data, visible experiments
-                and software that connects the two.
+            <div className="career-record">
+              <div className="career-role-line">
+                <div>
+                  <p className="career-small-label">CURRENT ROLE</p>
+                  <h4>{current.role}</h4>
+                  <p className="career-date">June 2026 — Present</p>
+                </div>
+                <ArrowUpRight size={27} strokeWidth={1.3} aria-hidden="true" />
+              </div>
+              <div className="career-previous">
+                <ArrowDownRight size={19} strokeWidth={1.4} aria-hidden="true" />
+                <div>
+                  <h4>{internship.role}</h4>
+                  <span>January — May 2026</span>
+                </div>
+                <span className="career-conversion">Converted to full-time</span>
+              </div>
+              <p className="career-summary">
+                Connecting enterprise data, intelligent workflows and the software that makes model
+                experiments visible.
               </p>
-              <p className="micro-label">SELECTED WORK FROM THE INTERNSHIP</p>
-              {internship.projects.map((project, i) => (
-                <section className="enterprise-story" key={project.name}>
-                  <span className="story-number" aria-hidden="true">
-                    0{i + 1}
-                  </span>
-                  <div>
-                    <h4>{project.name}</h4>
-                    <p>{project.description}</p>
-                    <div
-                      className="enterprise-route"
-                      aria-label={`${project.name} workflow outline`}
-                    >
-                      {(i === 0
-                        ? ['Cloud sources', 'Configurable ingestion', 'Unity Catalog']
-                        : ['MLflow runs', 'Delta + SQL', 'Model comparison']
-                      ).map((label) => (
-                        <span key={label}>{label}</span>
-                      ))}
+              <p className="career-small-label career-project-label">SELECTED INTERNSHIP WORK</p>
+              <div className="career-projects">
+                {internship.projects.map((project, index) => (
+                  <details className="career-project" key={project.name}>
+                    <summary>
+                      <span className="career-project-index">0{index + 1}</span>
+                      <span className="career-project-name">{project.name}</span>
+                      <span className="career-detail-affordance">
+                        <span>Details</span>
+                        <Plus size={18} aria-hidden="true" />
+                      </span>
+                    </summary>
+                    <div className="career-project-body">
+                      <p>{project.description}</p>
+                      <div className="career-route" aria-label={`${project.name} workflow`}>
+                        {(index === 0
+                          ? ['Cloud sources', 'Configurable ingestion', 'Unity Catalog']
+                          : ['MLflow runs', 'Delta + SQL', 'Model comparison']
+                        ).map((label) => (
+                          <span key={label}>{label}</span>
+                        ))}
+                      </div>
+                      <p className="career-stack">{project.stack}</p>
                     </div>
-                    <p className="experience-stack">
-                      {i === 0
-                        ? 'Streamlit · Databricks · LangChain · REST APIs'
-                        : 'React · FastAPI · MLflow · PySpark · Databricks SQL'}
-                    </p>
-                  </div>
-                </section>
-              ))}
+                  </details>
+                ))}
+              </div>
             </div>
           </article>
         </Reveal>
+
         <Reveal>
-          <article className="hal-experience">
-            <div>
-              <p className="micro-label">JUNE — JULY 2025</p>
-              <h3>Hindustan Aeronautics Limited</h3>
-              <p className="role-date">{hal.role}</p>
+          <article className="career-employer career-hal">
+            <div className="career-company">
+              <p className="career-year">JUNE — JULY 2025</p>
+              <div className="career-hal-initials" translate="no">
+                HAL
+              </div>
+              <h3>
+                Hindustan
+                <br />
+                Aeronautics Limited
+              </h3>
             </div>
-            <div>
-              <h4>Software for aerospace manufacturing.</h4>
-              <p>{hal.description}</p>
-              <p>
-                Session authentication, bcrypt and role-based access secured the workflow. An MVC
-                backend handled cost computations, with GitHub-based CI/CD for deployment.
+            <div className="career-record">
+              <div className="career-role-line">
+                <div>
+                  <p className="career-small-label">EARLY EXPERIENCE</p>
+                  <h4>{hal.role}</h4>
+                  <p className="career-date">Aerospace manufacturing · 2025</p>
+                </div>
+                <ArrowUpRight size={27} strokeWidth={1.3} aria-hidden="true" />
+              </div>
+              <p className="career-summary">
+                A secure cost estimator for the parts that keep aircraft moving.
               </p>
-              <p className="experience-stack">
-                Node.js · MySQL · express-session · bcrypt · MVC · CI/CD
-              </p>
+              <p className="career-body-copy">{hal.description}</p>
+              <details className="career-project career-hal-project">
+                <summary>
+                  <span className="career-project-name">Behind the application</span>
+                  <span className="career-detail-affordance">
+                    <span>Details</span>
+                    <Plus size={18} aria-hidden="true" />
+                  </span>
+                </summary>
+                <div className="career-project-body">
+                  <p>{hal.projects[0].description}</p>
+                  <p className="career-stack">{hal.projects[0].stack}</p>
+                </div>
+              </details>
             </div>
           </article>
         </Reveal>

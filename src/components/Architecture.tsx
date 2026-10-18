@@ -73,14 +73,15 @@ export default function Architecture() {
                 <div>
                   <span>PERSISTENT DATA</span>
                   <h4>PostgreSQL</h4>
-                  <p>Users · Sessions · Training context</p>
+                  <p>Users · Sessions · Reviews · Progress</p>
                 </div>
                 <span className="host-label">SUPABASE</span>
               </div>
             </div>
           </div>
           <p className="diagram-caption">
-            User context returns to the backend for personalized future inference.
+            Saved performance guides adaptive difficulty; richer training context is part of the
+            personalization rollout.
           </p>
         </div>
         <div className="architecture-notes">
@@ -120,8 +121,9 @@ export default function Architecture() {
             shared application context.
           </h4>
           <p>
-            Groq provides conversational and structured AI responses. The application supplies the
-            practice mode, session history and persistent training context.
+            Groq provides conversational and structured AI responses. The current chat path uses
+            the transcript, mode, topic, role and preferences, with difficulty selected from saved
+            performance.
           </p>
           <code>openai/gpt-oss-120b</code>
           <div className="workflow-sequence">
@@ -165,12 +167,12 @@ export default function Architecture() {
           <span className="feature-icon">
             <Check />
           </span>
-          <p className="eyebrow">DOCUMENTED v3.0.1 VERIFICATION</p>
+          <p className="eyebrow">DOCUMENTED v3.0.2 VERIFICATION</p>
           <h4>Quality you can inspect.</h4>
           <div className="test-metrics">
             <div>
-              <strong>47</strong>
-              <span>Unit / integration tests passed</span>
+              <strong>58</strong>
+              <span>Backend / integration tests passed</span>
             </div>
             <div>
               <strong>21</strong>
@@ -178,7 +180,7 @@ export default function Architecture() {
             </div>
           </div>
           <p className="metric-note">
-            Historical verification recorded for release v3.0.1, not a live test status.
+            Recorded v3.0.2 release verification, with four additional release-tool tests passed.
           </p>
         </div>
         <div className="glass quality-card">

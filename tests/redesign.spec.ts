@@ -49,6 +49,37 @@ test('compact navigation is usable without a mouse', async ({ page }, info) => {
   await expect(page).toHaveURL(/#projects$/);
 });
 
+test('career disclosures and the new work showcase expose the engineering behind each project', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const flagship = page.locator('.work-flagship');
+  await expect(flagship.getByRole('heading', { name: 'ArguLab.' })).toBeVisible();
+  await expect(flagship).toContainText('Illustrative workflow');
+  await expect(flagship.getByRole('link', { name: 'Explore case study' })).toHaveAttribute(
+    'href',
+    '/projects/argulab',
+  );
+  await expect(page.locator('.work-truth-card')).toContainText('local document-QA prototype');
+  await expect(page.locator('.work-voice-card')).toContainText(
+    'The web app serves a CNN baseline.',
+  );
+  const ingestion = page
+    .locator('.career-project')
+    .filter({ hasText: 'Agentic Data Ingestion Platform' });
+  await ingestion.locator('summary').focus();
+  await page.keyboard.press('Enter');
+  await expect(ingestion).toHaveAttribute('open', '');
+  await expect(ingestion.locator('.career-route')).toContainText('Unity Catalog');
+  await ingestion.locator('summary').focus();
+  await page.keyboard.press('Enter');
+  await expect(ingestion).not.toHaveAttribute('open', '');
+  await expect(page.locator('.career-role-line').first()).toContainText('AI & Data Engineer');
+  await expect(page.locator('.career-previous')).toContainText('January — May 2026');
+  await page.locator('.bio-link').click();
+  await expect(page).toHaveURL(/#skills$/);
+});
+
 test('magnetic actions settle, preserve native targets and disable with reduced motion', async ({
   page,
 }, info) => {

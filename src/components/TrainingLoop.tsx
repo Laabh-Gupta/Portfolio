@@ -31,11 +31,11 @@ export default function TrainingLoop() {
           <BrainCircuit size={24} />
         </span>
         <div>
-          <p className="eyebrow">THE PERSONALIZATION LOOP</p>
-          <h3>Every session informs the next.</h3>
+          <p className="eyebrow">PERSONALIZATION ARCHITECTURE</p>
+          <h3>A learning loop with memory.</h3>
         </div>
       </div>
-      <div className="loop-steps" role="group" aria-label="Explore the personalization loop">
+      <div className="loop-steps" role="group" aria-label="Explore the personalization architecture">
         {trainingLoop.map((item, index) => {
           const StepIcon = icons[item.icon];
           return (
@@ -72,7 +72,7 @@ export default function TrainingLoop() {
         </m.div>
       </div>
       <div className="loop-return">
-        <Repeat2 size={15} /> Saved context feeds back into future session requests.
+        <Repeat2 size={15} /> Designed to carry learning context into future practice.
       </div>
     </div>
   );

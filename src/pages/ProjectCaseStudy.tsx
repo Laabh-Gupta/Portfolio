@@ -35,8 +35,8 @@ export default function ProjectCaseStudy() {
             <span>Improve with context.</span>
           </p>
           <p>
-            {argulab.subtitle}. Built as an adaptive application that connects structured
-            conversation, evaluation and user-specific training context.
+            {argulab.subtitle}. Built around structured conversation, evaluation, saved history and
+            adaptive difficulty.
           </p>
           <Tags items={argulab.stack} />
           <div className="case-actions">
@@ -76,7 +76,7 @@ export default function ProjectCaseStudy() {
         </div>
         <div>
           <span>CORE IDEA</span>
-          <strong>Personalized training loop</strong>
+          <strong>Personalized training architecture</strong>
         </div>
         <div>
           <span>ENGINEERING</span>
@@ -98,8 +98,8 @@ export default function ProjectCaseStudy() {
             when the next session can build on what happened before.
           </p>
           <p>
-            ArguLab connects practice to structured feedback and persistent training context, so a
-            user’s previous strengths and weaknesses can shape future sessions.
+            ArguLab pairs structured feedback with saved reviews and resumable history, giving users
+            a record of what to work on next.
           </p>
         </div>
       </section>
@@ -142,7 +142,12 @@ export default function ProjectCaseStudy() {
         <div className="case-section-heading">
           <p className="eyebrow">THE DIFFERENCE</p>
           <h2>Context that carries forward.</h2>
-          <p>Select a step to explore how practice becomes personalized training.</p>
+          <p>Select a step to explore the personalization architecture.</p>
+          <p>
+            The current v3.0.2 release uses saved performance to adapt difficulty. The richer
+            summary and skill-context workflow shown below is rolling into deployment; full context
+            forwarding is awaiting verification.
+          </p>
         </div>
         <TrainingLoop />
       </section>
@@ -165,9 +170,8 @@ export default function ProjectCaseStudy() {
             <span className="micro-label">01 / CONTINUITY</span>
             <h3>Keep the useful context.</h3>
             <p>
-              Session persistence and saved training context connect an isolated conversation to
-              longer-term practice. History, transcripts and reviews stay useful after a session
-              ends.
+              Saved reviews, progress and resumable history make each session useful beyond the
+              conversation. Performance-based difficulty gives the next attempt a starting point.
             </p>
           </div>
           <div>

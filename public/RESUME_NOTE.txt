@@ -1,2 +1,2 @@
-Laabh_Gupta_Resume.pdf was refreshed from the supplied September 2026 professional brief.
-Regenerate it with scripts/build_resume.py (Python + reportlab). The old Laabh_Gupta.pdf URL is a compatibility alias.
+The download is the Laabh_Gupta.pdf supplied by Laabh Gupta on 18 October 2026.
+Laabh_Gupta.pdf is a compatibility alias of Laabh_Gupta_Resume.pdf.
