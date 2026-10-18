@@ -1,115 +1,81 @@
 import { useEffect, useRef, useState } from 'react';
-import { MousePointer2, ScanFace } from 'lucide-react';
-import { portraitPoints, portraitMesh, portraitContours } from '../data/portrait';
+import { Link } from 'react-router-dom';
+import { MoveUpRight, RotateCcw, ScanFace } from 'lucide-react';
+import { identityMetadata, identityFeatureEdges } from '../data/identity';
+import {
+  basePose,
+  drawIdentity,
+  facetPath,
+  identityFrame,
+  type IdentityMode,
+} from './identity/raster';
 
-type Mode = 'particles' | 'wireframe';
-type Point = readonly [number, number, number, number];
-type Segment = readonly [number, number, number, number, number, number];
+const still = identityFrame();
+type Controller = { wake: () => void; scan: () => void };
+const views: { id: IdentityMode; label: string }[] = [
+  { id: 'wireframe', label: 'Wireframe' },
+  { id: 'solid', label: 'Solid' },
+  { id: 'particles', label: 'Points' },
+];
 
-/** Photo-derived facial relief rendered locally. No photo, model inference or camera at runtime. */
+/** A neutral, multi-reference 3D mesh. All styling is geometric, independent of photo lighting. */
 export default function ParticlePortrait() {
-  const [mode, setMode] = useState<Mode>('particles');
+  const [mode, setMode] = useState<IdentityMode>('wireframe');
+  const [scanMessage, setScanMessage] = useState('');
   const figure = useRef<HTMLElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
-  const redraw = useRef<(() => void) | null>(null);
+  const controller = useRef<Controller | null>(null);
 
   useEffect(() => {
-    const host = figure.current;
-    const surface = canvas.current;
-    const context = surface?.getContext('2d');
+    const host = figure.current,
+      surface = canvas.current,
+      context = surface?.getContext('2d');
     if (!host || !surface || !context) return;
     const element = host,
       drawing = surface,
       ctx = context;
     const motion = matchMedia('(prefers-reduced-motion: no-preference)');
-    const pointer = matchMedia('(hover: hover) and (pointer: fine)');
+    const fine = matchMedia('(hover:hover) and (pointer:fine)');
     let frame = 0,
       visible = false,
-      started = 0,
-      progress = 0;
-    let pose = { x: 0, y: 0 },
-      target = { x: 0, y: 0 };
-    let mouse = { x: -1000, y: -1000, strength: 0, target: 0 };
+      scanning: number | null = null;
+    let pose = { ...basePose },
+      target = { ...basePose };
+    let drag: { x: number; y: number; active: boolean } | null = null;
 
-    function project(x: number, y: number, z: number): [number, number] {
-      const cx = x - 260,
-        cy = y - 260;
-      const xx = cx * Math.cos(pose.x) + z * Math.sin(pose.x);
-      const zz = z * Math.cos(pose.x) - cx * Math.sin(pose.x);
-      const yy = cy * Math.cos(pose.y) - zz * Math.sin(pose.y);
-      const depth = zz * Math.cos(pose.y) + cy * Math.sin(pose.y);
-      const perspective = 720 / (720 - depth);
-      return [260 + xx * perspective, 260 + yy * perspective];
-    }
-    function lines(segments: readonly Segment[], opacity: number) {
-      ctx.beginPath();
-      for (const line of segments) {
-        const a = project(line[0], line[1], line[2]);
-        const b = project(line[3], line[4], line[5]);
-        ctx.moveTo(a[0], a[1]);
-        ctx.lineTo(b[0], b[1]);
-      }
-      ctx.strokeStyle = `rgba(201,248,92,${opacity * progress})`;
-      ctx.lineWidth = 0.55;
-      ctx.stroke();
-    }
-    function paint() {
-      const width = drawing.width;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, width, width);
-      ctx.setTransform(width / 520, 0, 0, width / 520, 0, 0);
-      const wireframe = element.dataset.mode === 'wireframe';
-      if (wireframe) lines(portraitMesh, 0.15);
-      lines(portraitContours, wireframe ? 0.55 : 0.12);
-      for (let i = 0; i < portraitPoints.length; i++) {
-        const point = portraitPoints[i] as Point;
-        let [x, y] = project(point[0], point[1], point[2]);
-        const spread = 1 - progress;
-        const angle = i * 2.39996;
-        x += Math.cos(angle) * (50 + (i % 67)) * spread;
-        y += Math.sin(angle) * (45 + (i % 83)) * spread;
-        const dx = x - mouse.x,
-          dy = y - mouse.y;
-        const distance = Math.hypot(dx, dy);
-        if (distance > 0 && distance < 63) {
-          const force = (1 - distance / 63) ** 2 * 14 * mouse.strength;
-          x += (dx / distance) * force;
-          y += (dy / distance) * force;
-        }
-        const intensity = point[3];
-        ctx.fillStyle = intensity > 0.8 ? '#e7ffb0' : '#c9f85c';
-        ctx.globalAlpha =
-          (0.22 + intensity * 0.75) * (wireframe ? 0.65 : 1) * (0.2 + progress * 0.8);
-        ctx.beginPath();
-        ctx.arc(x, y, 0.55 + intensity * 0.7, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
+    function paint(scan: number | null = null) {
+      const mode = element.dataset.mode as IdentityMode;
+      drawIdentity(ctx, drawing.width, identityFrame(pose.yaw, pose.pitch), mode, scan);
       element.dataset.ready = 'true';
-      element.style.setProperty('--portrait-yaw', pose.x.toFixed(3));
+      element.style.setProperty('--portrait-yaw', pose.yaw.toFixed(3));
     }
     function tick(time: number) {
       frame = 0;
       if (!visible || document.hidden) return;
       if (!motion.matches) {
-        progress = 1;
-        pose = { x: 0, y: 0 };
-        mouse.strength = 0;
+        pose = { ...target };
+        scanning = null;
         paint();
         element.dataset.motion = 'static';
+        element.dataset.scan = 'idle';
         return;
       }
-      if (!started) started = time;
-      const t = Math.min(1, (time - started) / 1100);
-      progress = 1 - (1 - t) ** 3;
-      pose.x += (target.x - pose.x) * 0.12;
-      pose.y += (target.y - pose.y) * 0.12;
-      mouse.strength += (mouse.target - mouse.strength) * 0.14;
-      paint();
+      pose.yaw += (target.yaw - pose.yaw) * 0.13;
+      pose.pitch += (target.pitch - pose.pitch) * 0.13;
+      let scan: number | null = null;
+      if (scanning != null) {
+        scan = Math.min(1, (time - scanning) / 1900);
+        if (scan >= 1) {
+          scanning = null;
+          scan = null;
+          element.dataset.scan = 'idle';
+          setScanMessage('Scan complete.');
+        }
+      }
+      paint(scan);
       const moving =
-        t < 1 ||
-        Math.abs(target.x - pose.x) + Math.abs(target.y - pose.y) > 0.0003 ||
-        Math.abs(mouse.target - mouse.strength) > 0.003;
+        scanning != null ||
+        Math.abs(target.yaw - pose.yaw) + Math.abs(target.pitch - pose.pitch) > 0.0003;
       element.dataset.motion = moving ? 'running' : 'settled';
       if (moving) frame = requestAnimationFrame(tick);
     }
@@ -126,33 +92,76 @@ export default function ParticlePortrait() {
       wake();
     }
     function resize() {
-      const dpr = Math.min(devicePixelRatio || 1, 1.5);
-      const size = Math.round(drawing.clientWidth * dpr);
+      const size = Math.round(drawing.clientWidth * Math.min(devicePixelRatio || 1, 1.5));
       drawing.width = drawing.height = Math.max(size, 1);
       wake();
     }
     function move(event: PointerEvent) {
-      if (event.pointerType !== 'mouse' || !motion.matches || !pointer.matches) return;
+      if (!motion.matches) return;
       const rect = drawing.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width;
-      const y = (event.clientY - rect.top) / rect.height;
-      target = { x: (x - 0.5) * 0.5, y: (y - 0.5) * 0.28 };
-      mouse = { ...mouse, x: x * 520, y: y * 520, target: 1 };
-      wake();
+      if (event.pointerType === 'mouse' && fine.matches) {
+        const x = (event.clientX - rect.left) / rect.width,
+          y = (event.clientY - rect.top) / rect.height;
+        target = { yaw: basePose.yaw + (x - 0.5) * 0.7, pitch: basePose.pitch + (y - 0.5) * 0.32 };
+        wake();
+      } else if (drag) {
+        const dx = event.clientX - drag.x,
+          dy = event.clientY - drag.y;
+        if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.3) drag.active = true;
+        if (!drag.active) return;
+        target = {
+          yaw: basePose.yaw + Math.max(-0.45, Math.min(0.45, dx / rect.width)),
+          pitch: basePose.pitch,
+        };
+        wake();
+      }
     }
     function leave() {
-      target = { x: 0, y: 0 };
-      mouse.target = 0;
+      target = { ...basePose };
+      drag = null;
+      wake();
+    }
+    function down(event: PointerEvent) {
+      if (event.pointerType !== 'mouse')
+        drag = { x: event.clientX, y: event.clientY, active: false };
+    }
+    function keys(event: KeyboardEvent) {
+      if (event.target !== element) return;
+      const rotations: Record<string, [number, number]> = {
+        ArrowLeft: [-0.13, 0],
+        ArrowRight: [0.13, 0],
+        ArrowUp: [0, -0.09],
+        ArrowDown: [0, 0.09],
+      };
+      if (event.key === 'Home') {
+        event.preventDefault();
+        leave();
+        return;
+      }
+      const rotation = rotations[event.key];
+      if (!rotation) return;
+      event.preventDefault();
+      target = {
+        yaw: Math.max(-0.7, Math.min(0.7, target.yaw + rotation[0])),
+        pitch: Math.max(-0.3, Math.min(0.3, target.pitch + rotation[1])),
+      };
       wake();
     }
     function preferences() {
-      leave();
-      if (!motion.matches) {
-        progress = 1;
-        pose = { x: 0, y: 0 };
-        mouse.strength = 0;
-      }
+      target = { ...basePose };
+      scanning = null;
+      element.dataset.scan = 'idle';
       availability();
+    }
+    function scan() {
+      if (!motion.matches) {
+        setScanMessage('Still view: scan animation follows your reduced-motion preference.');
+        return;
+      }
+      scanning = performance.now();
+      element.dataset.scan = 'running';
+      setScanMessage('Scanning the 3D face.');
+      wake();
     }
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -165,34 +174,43 @@ export default function ParticlePortrait() {
     observer.observe(drawing);
     sizes.observe(drawing);
     drawing.addEventListener('pointermove', move, { passive: true });
+    drawing.addEventListener('pointerdown', down, { passive: true });
     drawing.addEventListener('pointerleave', leave);
+    drawing.addEventListener('pointerup', leave);
+    drawing.addEventListener('pointercancel', leave);
+    element.addEventListener('keydown', keys);
     document.addEventListener('visibilitychange', availability);
     motion.addEventListener('change', preferences);
-    pointer.addEventListener('change', preferences);
-    redraw.current = wake;
+    fine.addEventListener('change', preferences);
+    controller.current = { wake, scan };
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
       sizes.disconnect();
+      controller.current = null;
       drawing.removeEventListener('pointermove', move);
+      drawing.removeEventListener('pointerdown', down);
       drawing.removeEventListener('pointerleave', leave);
+      drawing.removeEventListener('pointerup', leave);
+      drawing.removeEventListener('pointercancel', leave);
+      element.removeEventListener('keydown', keys);
       document.removeEventListener('visibilitychange', availability);
       motion.removeEventListener('change', preferences);
-      pointer.removeEventListener('change', preferences);
-      redraw.current = null;
+      fine.removeEventListener('change', preferences);
     };
   }, []);
-
   useEffect(() => {
-    redraw.current?.();
+    controller.current?.wake();
   }, [mode]);
 
   return (
     <figure
       ref={figure}
-      className="intro-sculpture face-portrait"
+      tabIndex={0}
+      className="intro-sculpture face-portrait identity-portrait"
       data-mode={mode}
-      aria-label="Interactive particle portrait of Laabh Gupta"
+      data-reference-count={identityMetadata.referenceCount}
+      aria-label="Interactive 3D face of Laabh Gupta"
       aria-describedby="portrait-help"
     >
       <div className="intro-cross cross-one" aria-hidden="true">
@@ -203,68 +221,118 @@ export default function ParticlePortrait() {
       </div>
       <div className="portrait-topline" aria-hidden="true">
         <span>
-          <ScanFace size={13} /> A PORTRAIT IN POINTS
+          <ScanFace size={13} /> IDENTITY / LAABH GUPTA
         </span>
-        <span>LAABH GUPTA / 01</span>
+        <span>07 REFERENCES → ONE FORM</span>
       </div>
       <div className="portrait-stage">
         <svg className="portrait-guides" viewBox="0 0 520 520" aria-hidden="true" focusable="false">
           <defs>
-            <radialGradient id="portrait-halo">
-              <stop offset="0" stopColor="#c9f85c" stopOpacity=".045" />
+            <radialGradient id="identity-halo">
+              <stop offset="0" stopColor="#d7e2ce" stopOpacity=".06" />
               <stop offset="1" stopColor="#c9f85c" stopOpacity="0" />
             </radialGradient>
           </defs>
-          <circle cx="260" cy="260" r="250" fill="url(#portrait-halo)" />
+          <circle cx="260" cy="260" r="246" fill="url(#identity-halo)" />
           <circle className="orbit-guide" cx="260" cy="260" r="235" />
-          <path className="orbit-axis" d="M20 260H500M260 20V500" />
           <path
             className="portrait-brackets"
-            d="M130 98h-12v24M390 98h12v24M130 422h-12v-24M390 422h12v-24"
+            d="M122 94h-13v27M398 94h13v27M122 426h-13v-27M398 426h13v-27"
           />
+          <path className="identity-registration" d="M23 260h16M481 260h16M260 23v16M260 481v16" />
         </svg>
         <svg
-          className="portrait-fallback"
+          className="portrait-fallback identity-fallback"
           viewBox="0 0 520 520"
           aria-hidden="true"
           focusable="false"
         >
-          {portraitPoints
-            .filter((_, i) => i % 2 === 0)
-            .map((p, i) => (
-              <circle
-                key={i}
-                cx={p[0]}
-                cy={p[1]}
-                r={0.55 + p[3] * 0.7}
-                fill="#c9f85c"
-                opacity={0.22 + p[3] * 0.75}
+          {still.facets.map((f, i) => (
+            <path
+              key={i}
+              d={facetPath(still, f)}
+              fill={
+                mode === 'solid'
+                  ? `rgb(${Math.round(25 + f.light * 200)},${Math.round(27 + f.light * 200)},${Math.round(25 + f.light * 200)})`
+                  : '#141813'
+              }
+              stroke={mode === 'solid' ? '#dce4d718' : '#e2e9e080'}
+              strokeWidth=".55"
+            />
+          ))}
+          {Array.from({ length: identityFeatureEdges.length / 2 }, (_, i) => {
+            const ai = identityFeatureEdges[i * 2],
+              bi = identityFeatureEdges[i * 2 + 1];
+            if (!still.visible.has(ai) || !still.visible.has(bi)) return null;
+            const a = still.vertices[ai],
+              b = still.vertices[bi];
+            return (
+              <path
+                key={`feature-${i}`}
+                d={`M${a.x} ${a.y}L${b.x} ${b.y}`}
+                fill="none"
+                stroke="#c9f85c"
+                strokeOpacity=".65"
+                strokeWidth=".8"
               />
-            ))}
+            );
+          })}
         </svg>
         <canvas ref={canvas} className="portrait-canvas" aria-hidden="true" />
       </div>
-      <figcaption className="portrait-bottomline">
-        <span className="portrait-explore" id="portrait-help">
-          <MousePointer2 size={11} />
-          <span>MOVE TO EXPLORE</span>
-        </span>
-        <div className="portrait-controls" role="group" aria-label="Portrait display">
-          <button
-            type="button"
-            aria-pressed={mode === 'particles'}
-            onClick={() => setMode('particles')}
-          >
-            Particles
-          </button>
-          <button
-            type="button"
-            aria-pressed={mode === 'wireframe'}
-            onClick={() => setMode('wireframe')}
-          >
-            Wireframe
-          </button>
+      <figcaption className="identity-caption">
+        <div className="portrait-bottomline">
+          <span className="identity-instruction" id="portrait-help">
+            MOVE / DRAG TO TURN
+            <span className="sr-only">
+              . Focus the face and use the arrow keys to rotate. Press Home to reset.
+            </span>
+          </span>
+          <div className="identity-view-tools">
+            <div className="portrait-controls" role="group" aria-label="Face display">
+              {views.map((view) => (
+                <button
+                  type="button"
+                  key={view.id}
+                  aria-pressed={mode === view.id}
+                  onClick={() => setMode(view.id)}
+                >
+                  {view.label}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="identity-scan"
+              aria-label="Scan face"
+              onClick={() => controller.current?.scan()}
+              title="Run a single scanning pass"
+            >
+              <RotateCcw size={13} />
+              <span>Scan</span>
+            </button>
+          </div>
         </div>
+        <div className="identity-hotspots" aria-label="Explore my work through the face study">
+          <Link to="/?skill=genai#skills">
+            <span className="identity-node" />
+            Intelligence
+            <MoveUpRight size={10} />
+          </Link>
+          <Link to="/#projects">
+            <span className="identity-node" />
+            Applications
+            <MoveUpRight size={10} />
+          </Link>
+          <Link to="/#experience">
+            <span className="identity-node" />
+            Engineering
+            <MoveUpRight size={10} />
+          </Link>
+        </div>
+        <span className="sr-only" aria-live="polite">
+          {scanMessage}
+        </span>
       </figcaption>
     </figure>
   );

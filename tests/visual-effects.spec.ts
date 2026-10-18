@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 test.use({ reducedMotion: 'no-preference' });
 
-test('personal portrait renders without WebGL, settles and pauses offscreen', async ({
+test('multi-reference 3D face renders without WebGL, settles and pauses offscreen', async ({
   page,
 }, info) => {
   const errors: string[] = [];
@@ -29,13 +29,15 @@ test('personal portrait renders without WebGL, settles and pauses offscreen', as
   await page.goto('/');
   const hero = page.locator('.intro');
   const portrait = page.getByRole('figure', {
-    name: 'Interactive particle portrait of Laabh Gupta',
+    name: 'Interactive 3D face of Laabh Gupta',
   });
   const canvas = portrait.locator('.portrait-canvas');
   const pixels = () => canvas.evaluate((el) => (el as HTMLCanvasElement).toDataURL());
   await expect(portrait).toHaveAttribute('data-ready', 'true');
   await expect(canvas).toBeVisible();
-  expect(await portrait.locator('.portrait-fallback circle').count()).toBeGreaterThan(500);
+  await expect(portrait).toHaveAttribute('data-reference-count', '7');
+  await expect(portrait).toHaveAttribute('data-mode', 'wireframe');
+  expect(await portrait.locator('.portrait-fallback path').count()).toBeGreaterThan(100);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Laabh Gupta.');
   await expect(portrait).toHaveAttribute('data-motion', 'settled');
   expect(
@@ -70,9 +72,7 @@ test('personal portrait renders without WebGL, settles and pauses offscreen', as
   expect(errors).toEqual([]);
 });
 
-test('unavailable canvas leaves the photo-derived SVG portrait and portfolio usable', async ({
-  page,
-}) => {
+test('unavailable canvas leaves the geometric SVG face and portfolio usable', async ({ page }) => {
   await page.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function (
@@ -90,7 +90,7 @@ test('unavailable canvas leaves the photo-derived SVG portrait and portfolio usa
   const portrait = page.locator('.face-portrait');
   await expect(portrait.locator('.portrait-fallback')).toBeVisible();
   await expect(portrait.locator('.portrait-fallback')).toHaveCSS('opacity', '1');
-  expect(await portrait.locator('.portrait-fallback circle').count()).toBeGreaterThan(500);
+  expect(await portrait.locator('.portrait-fallback path').count()).toBeGreaterThan(100);
   await expect(portrait).not.toHaveAttribute('data-ready', 'true');
   await page.getByRole('link', { name: 'Explore case study' }).click();
   await expect(page).toHaveURL(/projects\/argulab$/);
@@ -118,7 +118,7 @@ test('portrait pauses while the document is hidden and resumes when visible', as
   await expect(portrait).toHaveAttribute('data-motion', 'settled');
 });
 
-test('portrait modes work by keyboard, pointer tilt resets and reduced motion stays still', async ({
+test('3D display modes work by keyboard, pointer rotation resets and reduced motion stays still', async ({
   page,
 }) => {
   await page.goto('/');
@@ -126,34 +126,76 @@ test('portrait modes work by keyboard, pointer tilt resets and reduced motion st
   const canvas = portrait.locator('.portrait-canvas');
   const pixels = () => canvas.evaluate((el) => (el as HTMLCanvasElement).toDataURL());
   const yaw = () =>
-    portrait.evaluate((el) =>
-      Math.abs(Number((el as HTMLElement).style.getPropertyValue('--portrait-yaw'))),
-    );
+    portrait.evaluate((el) => Number((el as HTMLElement).style.getPropertyValue('--portrait-yaw')));
   await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  const particles = await pixels();
-  const wireframe = portrait.getByRole('button', { name: 'Wireframe', exact: true });
-  await wireframe.focus();
-  await page.keyboard.press('Enter');
-  await expect(wireframe).toHaveAttribute('aria-pressed', 'true');
-  await expect(portrait.getByRole('button', { name: 'Particles', exact: true })).toHaveAttribute(
-    'aria-pressed',
-    'false',
-  );
-  await expect(portrait).toHaveAttribute('data-mode', 'wireframe');
-  await expect.poll(pixels).not.toBe(particles);
+  const baseYaw = await yaw();
+  let previous = await pixels();
+  for (const label of ['Solid', 'Points', 'Wireframe']) {
+    const control = portrait.getByRole('button', { name: label, exact: true });
+    await control.focus();
+    await page.keyboard.press('Enter');
+    await expect(control).toHaveAttribute('aria-pressed', 'true');
+    await expect(portrait.locator('.portrait-controls button[aria-pressed="true"]')).toHaveCount(1);
+    await expect.poll(pixels).not.toBe(previous);
+    previous = await pixels();
+  }
   const box = (await canvas.boundingBox())!;
   await canvas.hover({ position: { x: box.width * 0.8, y: box.height * 0.4 } });
-  await expect.poll(yaw).toBeGreaterThan(0.05);
+  await expect.poll(async () => Math.abs((await yaw()) - baseYaw)).toBeGreaterThan(0.05);
   await page.mouse.move(10, 10);
   await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  await expect.poll(yaw).toBeLessThan(0.001);
+  await expect.poll(async () => Math.abs((await yaw()) - baseYaw)).toBeLessThan(0.001);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(portrait).toHaveAttribute('data-motion', 'static');
   const still = await pixels();
   await canvas.hover({ position: { x: box.width * 0.75, y: box.height * 0.35 } });
   await page.waitForTimeout(200);
   expect(await pixels()).toBe(still);
-  expect(await yaw()).toBe(0);
+  expect(Math.abs((await yaw()) - baseYaw)).toBeLessThan(0.001);
+});
+
+test('focused face rotates with arrow keys and Home restores its initial pose', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const portrait = page.getByRole('figure', { name: 'Interactive 3D face of Laabh Gupta' });
+  const yaw = () =>
+    portrait.evaluate((el) => Number((el as HTMLElement).style.getPropertyValue('--portrait-yaw')));
+  await expect(portrait).toHaveAttribute('data-motion', 'settled');
+  const initialYaw = await yaw();
+  await portrait.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(async () => (await yaw()) - initialYaw).toBeGreaterThan(0.06);
+  await page.keyboard.press('Home');
+  await expect(portrait).toHaveAttribute('data-motion', 'settled');
+  await expect.poll(async () => Math.abs((await yaw()) - initialYaw)).toBeLessThan(0.001);
+  await expect(portrait).toBeFocused();
+});
+
+test('scan performs one pass, announces completion and returns to idle', async ({ page }) => {
+  await page.goto('/');
+  const portrait = page.locator('.face-portrait');
+  const pixels = () =>
+    portrait.locator('canvas').evaluate((el) => (el as HTMLCanvasElement).toDataURL());
+  await expect(portrait).toHaveAttribute('data-motion', 'settled');
+  const initial = await pixels();
+  await portrait.getByRole('button', { name: 'Scan face', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await expect(portrait).toHaveAttribute('data-scan', 'running');
+  await expect(portrait.locator('[aria-live="polite"]')).toHaveText('Scanning the 3D face.');
+  await expect.poll(pixels).not.toBe(initial);
+  await expect(portrait).toHaveAttribute('data-scan', 'idle');
+  await expect(portrait.locator('[aria-live="polite"]')).toHaveText('Scan complete.');
+  await expect(portrait).toHaveAttribute('data-motion', 'settled');
+  const finished = await pixels();
+  await page.waitForTimeout(250);
+  expect(await pixels()).toBe(finished);
+  await expect(portrait).toHaveAttribute('data-scan', 'idle');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(portrait).toHaveAttribute('data-motion', 'static');
+  await page.keyboard.press('Enter');
+  await expect(portrait.locator('[aria-live="polite"]')).toContainText('reduced-motion preference');
+  await expect(portrait).toHaveAttribute('data-scan', 'idle');
 });
 
 test('touch keeps portrait modes usable without tilt or an optional renderer', async ({
@@ -170,13 +212,16 @@ test('touch keeps portrait modes usable without tilt or an optional renderer', a
   const portrait = page.locator('.face-portrait');
   await expect(portrait).toHaveAttribute('data-ready', 'true');
   await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  await portrait.getByRole('button', { name: 'Wireframe', exact: true }).tap();
-  await expect(portrait).toHaveAttribute('data-mode', 'wireframe');
+  const initialYaw = await portrait.evaluate((el) =>
+    Number((el as HTMLElement).style.getPropertyValue('--portrait-yaw')),
+  );
+  await portrait.getByRole('button', { name: 'Solid', exact: true }).tap();
+  await expect(portrait).toHaveAttribute('data-mode', 'solid');
   expect(
     await portrait.evaluate((el) =>
       Number((el as HTMLElement).style.getPropertyValue('--portrait-yaw')),
     ),
-  ).toBe(0);
+  ).toBe(initialYaw);
   expect(
     await portrait.locator('canvas').evaluate((el) => getComputedStyle(el).touchAction),
   ).not.toBe('none');

@@ -994,3 +994,177 @@ body {
     transition: none;
   }
 }
+/* Multi-reference structural likeness. Silver geometry; lime identifies the features. */
+.identity-portrait:focus-visible {
+  outline: 1px solid #c9f85c80;
+  outline-offset: 10px;
+  border-radius: 5px;
+}
+.identity-portrait .portrait-stage {
+  margin-top: 2px;
+}
+.identity-portrait .portrait-topline {
+  color: #8d9684;
+}
+.identity-portrait .portrait-topline > span:first-child {
+  color: #c7d0be;
+}
+.identity-registration {
+  stroke: #d8e4cc38;
+  stroke-width: 0.65;
+  fill: none;
+}
+.identity-portrait .portrait-canvas {
+  cursor: grab;
+}
+.identity-portrait .portrait-canvas:active {
+  cursor: grabbing;
+}
+.identity-caption {
+  position: relative;
+  z-index: 1;
+  padding-top: 0;
+}
+.identity-portrait .portrait-bottomline {
+  margin-inline: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.identity-instruction {
+  color: #98a48a;
+  font: 7px/1.7 var(--font-mono);
+  letter-spacing: 0.07em;
+}
+.identity-view-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.identity-portrait .portrait-controls button {
+  padding: 7px 10px;
+  min-height: 29px;
+  font-size: 8px;
+}
+.identity-scan {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border: 1px solid #b5c29a35;
+  border-radius: 999px;
+  background: #1a2014;
+  color: #c5d2b6;
+  font: 8px/1.6 var(--font-mono);
+  min-height: 35px;
+}
+.identity-scan:hover {
+  color: #c9f85c;
+  border-color: #c9f85c70;
+}
+.identity-portrait[data-scan='running'] .identity-scan {
+  border-color: #c9f85c;
+  color: #c9f85c;
+}
+.identity-hotspots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  margin: 18px 12px 0;
+  padding: 13px 0 1px;
+  border-top: 1px solid #c9f85c19;
+  gap: 14px;
+}
+.identity-hotspots a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #9fab90;
+  font: 8px/1.6 var(--font-mono);
+}
+.identity-hotspots a > svg {
+  margin-left: auto;
+  color: #c9f85c80;
+}
+.identity-hotspots a:hover {
+  color: #ecf3df;
+}
+.identity-node {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #c9f85c;
+  box-shadow: 0 0 8px #c9f85c38;
+  flex-shrink: 0;
+}
+@media (max-width: 1100px) {
+  .identity-portrait .portrait-bottomline {
+    margin-inline: 0;
+  }
+  .identity-instruction {
+    font-size: 6px;
+  }
+  .identity-hotspots {
+    margin-inline: 0;
+    gap: 10px;
+  }
+  .identity-hotspots a {
+    font-size: 7px;
+  }
+}
+@media (max-width: 900px) {
+  .identity-portrait .portrait-bottomline {
+    justify-content: center;
+  }
+  .identity-instruction {
+    width: 100%;
+    text-align: center;
+  }
+  .identity-view-tools {
+    margin-inline: auto;
+  }
+  .identity-portrait .portrait-stage {
+    margin-top: 18px;
+  }
+  .identity-hotspots {
+    gap: 8px;
+    margin-top: 15px;
+  }
+  .identity-hotspots a {
+    gap: 5px;
+    font-size: 6px;
+  }
+}
+@media (max-width: 600px) {
+  .identity-portrait .portrait-stage {
+    margin-top: 14px;
+  }
+  .identity-portrait .portrait-bottomline {
+    gap: 11px;
+  }
+  .identity-instruction {
+    font-size: 7px;
+  }
+  .identity-portrait .portrait-controls button {
+    font-size: 8px;
+    min-height: 35px;
+    padding: 8px 12px;
+  }
+  .identity-scan {
+    min-height: 41px;
+    padding: 8px 12px;
+  }
+  .identity-hotspots a {
+    font-size: 7px;
+    padding-block: 7px;
+  }
+  .identity-hotspots {
+    margin-top: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .identity-portrait .portrait-canvas {
+    cursor: default;
+  }
+}

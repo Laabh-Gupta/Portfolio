@@ -23,12 +23,13 @@ for (const [width, height] of sizes) {
     const statement = (await page.locator('.intro-statement').boundingBox())!;
     expect(name.y + name.height).toBeLessThan(statement.y);
     const portrait = page.getByRole('figure', {
-      name: 'Interactive particle portrait of Laabh Gupta',
+      name: 'Interactive 3D face of Laabh Gupta',
     });
     await expect(portrait).toBeVisible();
     await expect(portrait).toHaveAttribute('data-ready', 'true');
     await expect(portrait).toHaveAttribute('data-motion', 'static');
-    expect(await portrait.locator('.portrait-fallback circle').count()).toBeGreaterThan(500);
+    await expect(portrait).toHaveAttribute('data-reference-count', '7');
+    expect(await portrait.locator('.portrait-fallback path').count()).toBeGreaterThan(100);
     await page.screenshot({ path: info.outputPath(`hero-${width}.png`) });
     for (const id of ['projects', 'experience', 'about', 'skills', 'contact']) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();
