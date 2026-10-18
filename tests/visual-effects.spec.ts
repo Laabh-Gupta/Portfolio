@@ -129,7 +129,7 @@ test('Switch changes both avatar images, supports keyboard input and preserves i
         .toBe(true);
     }
   }
-  await selected('cartoon');
+  await selected('portrait');
   await expect(control).toHaveAttribute('data-magnetic');
   await expect(page.getByRole('link', { name: 'Explore case study' })).toHaveAttribute(
     'data-magnetic',
@@ -140,24 +140,24 @@ test('Switch changes both avatar images, supports keyboard input and preserves i
   await expect(cursor).toHaveAttribute('data-motion', 'settled');
   await expect(cursor).toHaveCSS('pointer-events', 'none');
   await control.click();
-  await selected('portrait');
-  await control.click();
   await selected('cartoon');
+  await control.click();
+  await selected('portrait');
   await control.focus();
   await page.keyboard.press('Enter');
-  await selected('portrait');
+  await selected('cartoon');
   await page
     .locator('#projects')
     .evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
   await expect(traveller).toHaveAttribute('data-state', 'docked');
-  await selected('portrait');
+  await selected('cartoon');
   await page.getByRole('button', { name: 'Back to top', exact: true }).click();
   await expect(traveller).toHaveAttribute('data-state', 'hero');
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(2);
-  await selected('portrait');
+  await selected('cartoon');
   await control.focus();
   await page.keyboard.press('Space');
-  await selected('cartoon');
+  await selected('portrait');
 });
 
 test('direct contact loads dock correctly, Back to top works by keyboard and bare-home navigation resets the avatar', async ({

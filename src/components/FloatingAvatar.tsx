@@ -21,7 +21,7 @@ export default function FloatingAvatar() {
   const traveller = useRef<HTMLDivElement>(null);
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
   const [ready, setReady] = useState(false);
-  const [variant, setVariant] = useState<'cartoon' | 'portrait'>('cartoon');
+  const [variant, setVariant] = useState<'cartoon' | 'portrait'>('portrait');
   const asset = assets[variant];
   const [presentation, setPresentation] = useState<Presentation>({
     state: 'hero',
@@ -30,8 +30,8 @@ export default function FloatingAvatar() {
   });
 
   useEffect(() => {
-    const portrait = new Image();
-    portrait.src = assets.portrait;
+    const cartoon = new Image();
+    cartoon.src = assets.cartoon;
     const frame = requestAnimationFrame(() => setPortalHost(document.body));
     return () => cancelAnimationFrame(frame);
   }, []);
