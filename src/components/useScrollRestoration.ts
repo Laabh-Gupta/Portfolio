@@ -46,7 +46,7 @@ export function useScrollRestoration() {
           if (cancelled) return;
           const ready =
             location.pathname === '/'
-              ? document.querySelector('.hero')
+              ? document.getElementById('hero-title')
               : document.querySelector('.case-study, .not-found');
           const target = id ? document.getElementById(id) : null;
           if (!ready && !target) return;

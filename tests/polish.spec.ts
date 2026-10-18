@@ -22,14 +22,20 @@ for (const [width, height] of sizes) {
     const name = (await page.locator('.intro h1').boundingBox())!;
     const statement = (await page.locator('.intro-statement').boundingBox())!;
     expect(name.y + name.height).toBeLessThan(statement.y);
-    const portrait = page.getByRole('figure', {
-      name: 'Interactive 3D face of Laabh Gupta',
-    });
-    await expect(portrait).toBeVisible();
-    await expect(portrait).toHaveAttribute('data-ready', 'true');
-    await expect(portrait).toHaveAttribute('data-motion', 'static');
-    await expect(portrait).toHaveAttribute('data-reference-count', '7');
-    expect(await portrait.locator('.portrait-fallback path').count()).toBeGreaterThan(100);
+    const avatar = page.locator('.floating-avatar-slot');
+    await expect(avatar).toBeVisible();
+    await expect(avatar).toHaveAttribute('data-avatar-ready', 'true');
+    await expect
+      .poll(() =>
+        avatar
+          .locator('img')
+          .evaluate(
+            (el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0,
+          ),
+      )
+      .toBe(true);
+    await expect(page.locator('.floating-avatar-traveller')).toHaveAttribute('data-state', 'hero');
+    await expect(page.locator('.floating-avatar-art')).toHaveCSS('animation-name', 'none');
     await page.screenshot({ path: info.outputPath(`hero-${width}.png`) });
     for (const id of ['projects', 'experience', 'about', 'skills', 'contact']) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();

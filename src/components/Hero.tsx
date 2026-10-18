@@ -2,7 +2,7 @@ import { ArrowDown, ArrowDownRight, ArrowUpRight, Download } from 'lucide-react'
 import { Link } from 'react-router-dom';
 import { personal } from '../data/portfolio';
 import IntroLabel from './IntroLabel';
-import ParticlePortrait from './ParticlePortrait';
+import FloatingAvatar from './FloatingAvatar';
 import { useEffect, useRef } from 'react';
 
 export default function Hero() {
@@ -41,7 +41,7 @@ export default function Hero() {
       <div className="intro-grid">
         <div className="intro-copy">
           <p className="intro-hello">Hello, I’m</p>
-          <h1 id="hero-title" translate="no">
+          <h1 id="hero-title" tabIndex={-1} translate="no">
             Laabh{' '}
             <span>
               Gupta<span className="intro-period">.</span>
@@ -70,7 +70,7 @@ export default function Hero() {
             </a>
           </div>
         </div>
-        <ParticlePortrait />
+        <FloatingAvatar />
       </div>
       <div className="intro-bottom">
         <a href="#experience" className="intro-current">

@@ -209,21 +209,14 @@ test('reduced motion disables CSS animation and smooth scroll', async ({ page })
   expect(await page.locator('html').evaluate((el) => getComputedStyle(el).scrollBehavior)).toBe(
     'auto',
   );
-  const portrait = page.locator('.face-portrait');
-  await expect(portrait).toHaveAttribute('data-motion', 'static');
-  await expect(portrait).toHaveAttribute('data-ready', 'true');
+  const avatar = page.locator('.floating-avatar-traveller');
+  await expect(avatar).toHaveAttribute('data-motion', /static|paused/);
+  await expect(avatar).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('html')).not.toHaveClass(/lenis/);
-  await expect(portrait.locator('.portrait-canvas')).toBeVisible();
-  const portraitPixels = () =>
-    portrait.locator('canvas').evaluate((el) => (el as HTMLCanvasElement).toDataURL());
-  const still = await portraitPixels();
+  await expect(avatar.locator('.floating-avatar-art')).toHaveCSS('animation-name', 'none');
+  const still = await avatar.locator('img').boundingBox();
   await page.waitForTimeout(200);
-  expect(await portraitPixels()).toBe(still);
-  expect(
-    await page.evaluate(() =>
-      performance.getEntriesByType('resource').some((r) => r.name.includes('/assets/scene-')),
-    ),
-  ).toBe(false);
+  expect(await avatar.locator('img').boundingBox()).toEqual(still);
 });
 
 test('motion preference changes clean up smooth scrolling without breaking navigation', async ({

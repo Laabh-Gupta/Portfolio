@@ -1,244 +1,194 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test.use({ reducedMotion: 'no-preference' });
 
-test('multi-reference 3D face renders without WebGL, settles and pauses offscreen', async ({
+async function readyAvatar(page: Page) {
+  await page.evaluate(() => document.fonts.ready);
+  const slot = page.locator('.floating-avatar-slot');
+  const traveller = page.locator('.floating-avatar-traveller');
+  await expect(slot).toHaveAttribute('data-avatar-ready', 'true');
+  await expect(traveller).toHaveAttribute('data-ready', 'true');
+  await expect
+    .poll(() =>
+      traveller
+        .locator('img')
+        .evaluate(
+          (el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0,
+        ),
+    )
+    .toBe(true);
+  return { slot, traveller };
+}
+
+async function withinViewport(page: Page, locator: Locator) {
+  const box = (await locator.boundingBox())!;
+  const viewport = page.viewportSize()!;
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.y).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
+  expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
+  return box;
+}
+
+test('illustrated avatar loads once accessibly and its floating motion follows document visibility', async ({
   page,
 }, info) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(message.text());
-  });
-  await page.addInitScript(() => {
-    const original = HTMLCanvasElement.prototype.getContext;
-    Object.assign(window, { portfolioWebGLRequests: 0 });
-    HTMLCanvasElement.prototype.getContext = function (
-      this: HTMLCanvasElement,
-      kind: string,
-      ...args: unknown[]
-    ) {
-      if (kind.startsWith('webgl')) {
-        const metrics = window as unknown as { portfolioWebGLRequests: number };
-        metrics.portfolioWebGLRequests++;
-      }
-      return Reflect.apply(original, this, [kind, ...args]);
-    } as typeof original;
-  });
   await page.goto('/');
-  const hero = page.locator('.intro');
-  const portrait = page.getByRole('figure', {
-    name: 'Interactive 3D face of Laabh Gupta',
-  });
-  const canvas = portrait.locator('.portrait-canvas');
-  const pixels = () => canvas.evaluate((el) => (el as HTMLCanvasElement).toDataURL());
-  await expect(portrait).toHaveAttribute('data-ready', 'true');
-  await expect(canvas).toBeVisible();
-  await expect(portrait).toHaveAttribute('data-reference-count', '7');
-  await expect(portrait).toHaveAttribute('data-mode', 'wireframe');
-  expect(await portrait.locator('.portrait-fallback path').count()).toBeGreaterThan(100);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Laabh Gupta.');
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  expect(
-    await canvas.evaluate((el) => {
-      const surface = el as HTMLCanvasElement;
-      return surface
-        .getContext('2d')!
-        .getImageData(0, 0, surface.width, surface.height)
-        .data.some((value, index) => index % 4 === 3 && value > 0);
-    }),
-  ).toBe(true);
-  const settled = await pixels();
-  await page.waitForTimeout(250);
-  expect(await pixels()).toBe(settled);
-  expect(
-    await page.evaluate(
-      () => (window as unknown as { portfolioWebGLRequests: number }).portfolioWebGLRequests,
-    ),
-  ).toBe(0);
-  await page.screenshot({ path: info.outputPath('hero-personal-portrait.png') });
-  await page
-    .locator('#projects')
-    .evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
-  await expect(portrait).toHaveAttribute('data-motion', 'paused');
-  const paused = await pixels();
-  await page.waitForTimeout(250);
-  expect(await pixels()).toBe(paused);
-  await hero.evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  await page.getByRole('link', { name: 'Explore case study' }).click();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('ArguLab.');
-  expect(errors).toEqual([]);
-});
-
-test('unavailable canvas leaves the geometric SVG face and portfolio usable', async ({ page }) => {
-  await page.addInitScript(() => {
-    const original = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function (
-      this: HTMLCanvasElement,
-      kind: string,
-      ...args: unknown[]
-    ) {
-      if (this.classList.contains('portrait-canvas')) return null;
-      return Reflect.apply(original, this, [kind, ...args]);
-    } as typeof original;
-  });
-  const errors: string[] = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('/');
-  const portrait = page.locator('.face-portrait');
-  await expect(portrait.locator('.portrait-fallback')).toBeVisible();
-  await expect(portrait.locator('.portrait-fallback')).toHaveCSS('opacity', '1');
-  expect(await portrait.locator('.portrait-fallback path').count()).toBeGreaterThan(100);
-  await expect(portrait).not.toHaveAttribute('data-ready', 'true');
-  await page.getByRole('link', { name: 'Explore case study' }).click();
-  await expect(page).toHaveURL(/projects\/argulab$/);
-  expect(errors).toEqual([]);
-});
-
-test('portrait pauses while the document is hidden and resumes when visible', async ({ page }) => {
-  await page.goto('/');
-  const portrait = page.locator('.face-portrait');
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  const pixels = () =>
-    portrait.locator('canvas').evaluate((el) => (el as HTMLCanvasElement).toDataURL());
+  const { traveller } = await readyAvatar(page);
+  await expect(
+    page.getByRole('img', { name: 'Illustrated avatar of Laabh Gupta', exact: true }),
+  ).toHaveCount(1);
+  await expect(traveller).toHaveAttribute('data-state', 'hero');
+  await expect(traveller).toHaveAttribute('data-motion', 'floating');
+  await expect(traveller.locator('.floating-avatar-art')).toHaveCSS(
+    'animation-name',
+    'avatar-float',
+  );
+  await page.screenshot({ path: info.outputPath('hero-illustrated-avatar.png') });
   await page.evaluate(() => {
     Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
     document.dispatchEvent(new Event('visibilitychange'));
   });
-  await expect(portrait).toHaveAttribute('data-motion', 'paused');
-  const paused = await pixels();
-  await page.waitForTimeout(200);
-  expect(await pixels()).toBe(paused);
+  await expect(traveller).toHaveAttribute('data-hidden', 'true');
+  await expect(traveller).toHaveAttribute('data-motion', 'paused');
+  await expect(traveller.locator('.floating-avatar-art')).toHaveCSS('animation-name', 'none');
   await page.evaluate(() => {
     Object.defineProperty(document, 'hidden', { configurable: true, get: () => false });
     document.dispatchEvent(new Event('visibilitychange'));
   });
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
+  await expect(traveller).toHaveAttribute('data-hidden', 'false');
+  await expect(traveller).toHaveAttribute('data-motion', 'floating');
+  expect(errors).toEqual([]);
 });
 
-test('3D display modes work by keyboard, pointer rotation resets and reduced motion stays still', async ({
+test('scroll shrinks the avatar into its corner and reverses without moving the reserved hero layout', async ({
   page,
 }) => {
   await page.goto('/');
-  const portrait = page.locator('.face-portrait');
-  const canvas = portrait.locator('.portrait-canvas');
-  const pixels = () => canvas.evaluate((el) => (el as HTMLCanvasElement).toDataURL());
-  const yaw = () =>
-    portrait.evaluate((el) => Number((el as HTMLElement).style.getPropertyValue('--portrait-yaw')));
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  const baseYaw = await yaw();
-  let previous = await pixels();
-  for (const label of ['Solid', 'Points', 'Wireframe']) {
-    const control = portrait.getByRole('button', { name: label, exact: true });
-    await control.focus();
-    await page.keyboard.press('Enter');
-    await expect(control).toHaveAttribute('aria-pressed', 'true');
-    await expect(portrait.locator('.portrait-controls button[aria-pressed="true"]')).toHaveCount(1);
-    await expect.poll(pixels).not.toBe(previous);
-    previous = await pixels();
-  }
-  const box = (await canvas.boundingBox())!;
-  await canvas.hover({ position: { x: box.width * 0.8, y: box.height * 0.4 } });
-  await expect.poll(async () => Math.abs((await yaw()) - baseYaw)).toBeGreaterThan(0.05);
-  await page.mouse.move(10, 10);
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  await expect.poll(async () => Math.abs((await yaw()) - baseYaw)).toBeLessThan(0.001);
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect(portrait).toHaveAttribute('data-motion', 'static');
-  const still = await pixels();
-  await canvas.hover({ position: { x: box.width * 0.75, y: box.height * 0.35 } });
-  await page.waitForTimeout(200);
-  expect(await pixels()).toBe(still);
-  expect(Math.abs((await yaw()) - baseYaw)).toBeLessThan(0.001);
-});
-
-test('focused face rotates with arrow keys and Home restores its initial pose', async ({
-  page,
-}) => {
-  await page.goto('/');
-  const portrait = page.getByRole('figure', { name: 'Interactive 3D face of Laabh Gupta' });
-  const yaw = () =>
-    portrait.evaluate((el) => Number((el as HTMLElement).style.getPropertyValue('--portrait-yaw')));
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  const initialYaw = await yaw();
-  await portrait.focus();
-  await page.keyboard.press('ArrowRight');
-  await expect.poll(async () => (await yaw()) - initialYaw).toBeGreaterThan(0.06);
-  await page.keyboard.press('Home');
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  await expect.poll(async () => Math.abs((await yaw()) - initialYaw)).toBeLessThan(0.001);
-  await expect(portrait).toBeFocused();
-});
-
-test('scan performs one pass, announces completion and returns to idle', async ({ page }) => {
-  await page.goto('/');
-  const portrait = page.locator('.face-portrait');
-  const pixels = () =>
-    portrait.locator('canvas').evaluate((el) => (el as HTMLCanvasElement).toDataURL());
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  const initial = await pixels();
-  await portrait.getByRole('button', { name: 'Scan face', exact: true }).focus();
-  await page.keyboard.press('Enter');
-  await expect(portrait).toHaveAttribute('data-scan', 'running');
-  await expect(portrait.locator('[aria-live="polite"]')).toHaveText('Scanning the 3D face.');
-  await expect.poll(pixels).not.toBe(initial);
-  await expect(portrait).toHaveAttribute('data-scan', 'idle');
-  await expect(portrait.locator('[aria-live="polite"]')).toHaveText('Scan complete.');
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  const finished = await pixels();
-  await page.waitForTimeout(250);
-  expect(await pixels()).toBe(finished);
-  await expect(portrait).toHaveAttribute('data-scan', 'idle');
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect(portrait).toHaveAttribute('data-motion', 'static');
-  await page.keyboard.press('Enter');
-  await expect(portrait.locator('[aria-live="polite"]')).toContainText('reduced-motion preference');
-  await expect(portrait).toHaveAttribute('data-scan', 'idle');
-});
-
-test('touch keeps portrait modes usable without tilt or an optional renderer', async ({
-  browser,
-}) => {
-  const context = await browser.newContext({
-    viewport: { width: 1024, height: 768 },
-    hasTouch: true,
-    isMobile: true,
-    reducedMotion: 'no-preference',
-  });
-  const page = await context.newPage();
-  await page.goto(test.info().project.use.baseURL + '/');
-  const portrait = page.locator('.face-portrait');
-  await expect(portrait).toHaveAttribute('data-ready', 'true');
-  await expect(portrait).toHaveAttribute('data-motion', 'settled');
-  const initialYaw = await portrait.evaluate((el) =>
-    Number((el as HTMLElement).style.getPropertyValue('--portrait-yaw')),
+  const { slot, traveller } = await readyAvatar(page);
+  const original = (await slot.boundingBox())!;
+  const heroSize = (await traveller.boundingBox())!.width;
+  const headerHeight = (await page.locator('.site-header').boundingBox())!.height;
+  const travelStart = Math.max(0, original.y - headerHeight - 14 - 64);
+  const travelDistance = Math.max(180, Math.min(360, original.width * 0.72));
+  await page.evaluate(
+    (top) => window.scrollTo({ top, behavior: 'instant' }),
+    travelStart + travelDistance / 2,
   );
-  await portrait.getByRole('button', { name: 'Solid', exact: true }).tap();
-  await expect(portrait).toHaveAttribute('data-mode', 'solid');
-  expect(
-    await portrait.evaluate((el) =>
-      Number((el as HTMLElement).style.getPropertyValue('--portrait-yaw')),
-    ),
-  ).toBe(initialYaw);
-  expect(
-    await portrait.locator('canvas').evaluate((el) => getComputedStyle(el).touchAction),
-  ).not.toBe('none');
-  expect(
-    await page.evaluate(() =>
-      performance.getEntriesByType('resource').some((r) => /scene-.*\.js/.test(r.name)),
-    ),
-  ).toBe(false);
-  await page.setViewportSize({ width: 390, height: 844 });
-  await expect(portrait).toBeVisible();
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
-    ),
-  ).toBe(false);
-  await context.close();
+  await expect(traveller).toHaveAttribute('data-state', 'travelling');
+  const travelling = (await traveller.boundingBox())!;
+  expect(travelling.width).toBeLessThan(heroSize);
+  await page
+    .locator('#projects')
+    .evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  await expect(traveller).toHaveAttribute('data-state', 'docked');
+  const docked = await withinViewport(page, traveller);
+  expect(docked.width).toBeLessThan(heroSize / 2);
+  const reserved = await slot.evaluate((el) => {
+    const rect = el.getBoundingClientRect();
+    return { y: rect.top + window.scrollY, width: rect.width, height: rect.height };
+  });
+  expect(reserved.y).toBeCloseTo(original.y, 0);
+  expect(reserved.width).toBeCloseTo(original.width, 0);
+  expect(reserved.height).toBeCloseTo(original.height, 0);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await expect(traveller).toHaveAttribute('data-state', 'hero');
+  const restored = (await traveller.boundingBox())!;
+  expect(restored.width).toBeCloseTo(heroSize, 0);
+  expect(restored.x).toBeCloseTo(original.x, 0);
+  expect(restored.y).toBeCloseTo(original.y, 0);
 });
+
+test('direct contact loads dock correctly, Back to top works by keyboard and bare-home navigation resets the avatar', async ({
+  page,
+}) => {
+  await page.goto('/#contact');
+  const { traveller } = await readyAvatar(page);
+  await expect(traveller).toHaveAttribute('data-state', 'docked');
+  await withinViewport(page, traveller);
+  const back = page.getByRole('button', { name: 'Back to top', exact: true });
+  await back.focus();
+  await page.keyboard.press('Enter');
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(2);
+  await expect(traveller).toHaveAttribute('data-state', 'hero');
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
+  await expect(page).toHaveURL(/\/$/);
+  await page.getByRole('link', { name: 'Contact', exact: true }).click();
+  await expect(page).toHaveURL(/#contact$/);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100);
+  await expect(traveller).toHaveAttribute('data-state', 'docked');
+  await page.getByRole('link', { name: 'Explore case study' }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('ArguLab.');
+  await expect(page.locator('.floating-avatar-traveller')).toHaveCount(0);
+  await page.getByRole('link', { name: 'Laabh Gupta home' }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Laabh Gupta.');
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(2);
+  await expect(page.locator('.floating-avatar-traveller')).toHaveAttribute('data-state', 'hero');
+});
+
+test('reduced motion keeps the illustration still and snaps between hero and dock', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const { traveller } = await readyAvatar(page);
+  await expect(traveller).toHaveAttribute('data-motion', 'static');
+  await expect(traveller.locator('.floating-avatar-art')).toHaveCSS('animation-name', 'none');
+  const still = await traveller.locator('img').boundingBox();
+  await page.waitForTimeout(200);
+  expect(await traveller.locator('img').boundingBox()).toEqual(still);
+  await page
+    .locator('#projects')
+    .evaluate((el) => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
+  await expect(traveller).toHaveAttribute('data-state', 'docked');
+  await expect(traveller).toHaveAttribute('data-motion', 'static');
+  await withinViewport(page, traveller);
+  await page.getByRole('button', { name: 'Back to top', exact: true }).click();
+  await expect(traveller).toHaveAttribute('data-state', 'hero');
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(2);
+});
+
+for (const width of [390, 320]) {
+  test(`docked avatar leaves navigation and contact controls unobstructed at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/#contact');
+    const { traveller } = await readyAvatar(page);
+    await expect(traveller).toHaveAttribute('data-state', 'docked');
+    await withinViewport(page, traveller);
+    const copy = page.getByRole('button', { name: 'Copy email address' });
+    await copy.scrollIntoViewIfNeeded();
+    await expect(copy).toBeInViewport();
+    expect(
+      await copy.evaluate((el) => {
+        const rect = el.getBoundingClientRect();
+        return el.contains(
+          document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2),
+        );
+      }),
+    ).toBe(true);
+    await copy.click();
+    await expect(page.getByRole('status')).toHaveText('Email copied');
+    await page.getByRole('button', { name: 'Open navigation' }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    await expect(traveller).toHaveAttribute('data-hidden', 'true');
+    await expect(traveller).toHaveAttribute('data-motion', 'paused');
+    await expect(traveller).toHaveAttribute('inert', '');
+    await dialog.getByRole('link', { name: 'Experience', exact: true }).click();
+    await expect(dialog).not.toBeVisible();
+    await expect(traveller).toHaveAttribute('data-hidden', 'false');
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      ),
+    ).toBe(false);
+  });
+}
 
 test('1024px layout, keyboard focus, and contact flow remain usable', async ({ page }, info) => {
   await page.setViewportSize({ width: 1024, height: 900 });

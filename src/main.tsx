@@ -9,6 +9,7 @@ import './responsive.css';
 import './portfolio-refresh.css';
 import './projects-refresh.css';
 import './career-refresh.css';
+import './avatar.css';
 import App from './App';
 
 const root = document.getElementById('root')!;

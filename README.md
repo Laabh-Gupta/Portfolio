@@ -1,6 +1,6 @@
 # Laabh Gupta — Engineering portfolio
 
-A React + TypeScript portfolio with a graphite, cream and electric-lime visual identity. An interactive geometric 3D head, built from all seven supplied reference photographs, introduces Laabh’s AI/ML and software work. ArguLab leads the selected projects, followed by Voice Anti-Spoofing, TruthGuard and an interactive project index. Career stories cover EY GDS and HAL.
+A React + TypeScript portfolio with a graphite, cream and electric-lime visual identity. A personal illustrated avatar floats in the hero, then shrinks into a corner as visitors scroll through Laabh’s AI/ML and software work. ArguLab leads the selected projects, followed by Voice Anti-Spoofing, TruthGuard and an interactive project index. Career stories cover EY GDS and HAL.
 
 [Portfolio](https://laabh-portfolio.netlify.app/) · [ArguLab](https://argulab.netlify.app/dashboard)
 
@@ -27,9 +27,9 @@ The production build prerenders home, `/projects/argulab` and the 404 page. Play
 ## Content and design
 
 - `src/data/portfolio.ts`: profile, career facts, projects, skills and certifications.
-- `src/components/ParticlePortrait.tsx`: the universal 3D identity component, with Wireframe, Solid and Points views, pointer/drag/keyboard rotation, a one-pass scan and links into the portfolio. Canvas rendering settles at rest and pauses offscreen/in hidden tabs; reduced-motion users get a still view.
-- `src/components/identity/raster.ts`: perspective projection, backface culling, depth-sorted triangle surfaces and directional lighting shared by the canvas rendering and geometric SVG fallback.
-- `src/data/identity.ts`: 906 vertices, 1,796 triangles and 136 facial feature edges. All seven references contribute to the same pose-aligned face geometry; no photograph, pixel luminance, image mask or texture is embedded.
+- `src/components/FloatingAvatar.tsx`: stable hero slot and one travelling visual in a body portal. Measured scroll positions shrink the avatar into a top-right badge; its Back to top button clears stale route fragments and restores heading focus.
+- `src/avatar.css`: floating animation, hero glow, corner badge and reduced-motion styling. Motion pauses in hidden tabs, and the avatar is hidden/inert while a dialog is open.
+- `public/images/laabh-avatar.png`: transparent personal cartoon illustration generated with the built-in image-generation tool, using selected supplied photos as identity references. The original photographs are untracked.
 - `src/portfolio-refresh.css`: visual tokens, hero, navigation, skills and contact styles.
 - `src/projects-refresh.css`: ArguLab flagship, supporting work and project index.
 - `src/career-refresh.css`: employer details and cream About section.
@@ -40,15 +40,15 @@ The supplied 21st.dev references inform the glow cards, flow-field atmosphere, m
 
 ArguLab’s release evidence records v3.0.2 with 58 backend/integration tests, 21 browser tests and four additional release-tool tests. The case study distinguishes shipped saved-performance adaptive difficulty from the richer personalization-context rollout. The public repository contains product and engineering documentation; application source is private.
 
-The current head is three-dimensional geometry rendered with a 2D canvas and an SVG fallback; it does not download a WebGL renderer or face-detection model. Its front facial structure aggregates 478 detected landmarks per reference. Fourteen iterations of robust generalized similarity Procrustes alignment normalize capture pose and scale around stable eye, nose and cheek anchors, with expression weighting around the mouth. Every reference contributes to the final face. The posterior cranium, ears, neck and eye/mouth closure are inferred geometry, so this is an interpreted identity study rather than a photogrammetric head scan. `identityMetadata` records reference contributions, alignment error, procedural parts and topology checks.
+The current hero loads an illustrated PNG; it does not download a WebGL renderer or face-detection model. CSS handles the gentle float, while passive scroll events schedule one animation frame to update translation and scale. The hero slot remains reserved to prevent layout jumps. Reduced-motion preferences disable floating and replace the travel with an immediate position change.
 
-The original Three.js identity implementation, the earlier single-photo `src/data/portrait.ts` / `scripts/build_portrait.py` pipeline and design records in `docs/` remain historical references. The current hero and sharing card use `identity.ts`.
+The Three.js, single-photo `portrait.ts` and seven-reference `identity.ts` geometry experiments remain historical references, together with their build scripts and design records in `docs/`. They are not imported by the current hero.
 
 ## Resume and sharing
 
 `public/Laabh_Gupta_Resume.pdf` is the exact supplied resume. `public/Laabh_Gupta.pdf` is a compatibility alias. Replace both files together when updating the resume. The older `scripts/build_resume.py` remains historical and should not overwrite the supplied PDF.
 
-`scripts/build_identity.py` reproducibly builds the shared geometry from a scratch landmark JSON file. It requires Python and NumPy; the source photographs and locally extracted landmark JSON are intentionally untracked. The default input is `tmp/identity-landmarks.json`, which must contain all seven `images` entries (`photo1` through `photo7`) and the detector’s `connections`. Each image entry supplies `width`, `height`, 478 normalized `landmarks` (`x`, `y`, `z`) and `matrices[0].data` (a 16-value capture-pose matrix). Connections contain the tessellation and named facial edge groups as `{start, end}` pairs. The script reads these measurements without loading image pixels.
+The historical `scripts/build_identity.py` builds the earlier geometry from a scratch landmark JSON file using Python and NumPy. That input has seven `images` entries (`photo1` through `photo7`) and detector `connections`; each image supplies dimensions, 478 normalized xyz landmarks and a capture-pose matrix. Source photos and scratch measurements remain untracked. This pipeline does not generate the current illustrated avatar.
 
 ```sh
 python scripts/build_identity.py --input tmp/identity-landmarks.json --out src/data/identity.ts --report output/identity-normalization.json
