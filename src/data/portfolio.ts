@@ -8,7 +8,7 @@ export const personal = {
   linkedin: 'https://linkedin.com/in/laabhgupta',
   leetcode: 'https://leetcode.com/u/laabhgupta',
   url: 'https://laabh-portfolio.netlify.app',
-  resume: '/Laabh_Gupta_Resume.pdf',
+  resume: '/Laabh_Gupta.pdf',
   summary: 'Building AI systems, full-stack products and production-oriented ML infrastructure.',
 } as const;
 
